@@ -6,7 +6,7 @@ import frappe
 from frappe import _, msgprint
 from frappe.utils import flt, _round
 from erpnext.setup.utils import get_company_currency
-from erpnext.accounts.party import get_party_details
+from erpnext.contacts.doctype.party.party import get_party_details
 
 from erpnext.controllers.stock_controller import StockController
 

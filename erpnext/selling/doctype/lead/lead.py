@@ -122,7 +122,7 @@ def make_opportunity(source_name, target_doc=None):
 def get_lead_details(lead):
 	if not lead: return {}
 	
-	from erpnext.accounts.party import set_address_details
+	from erpnext.contacts.doctype.party.party import set_address_details
 	out = frappe._dict()
 	
 	lead_doc = frappe.get_doc("Lead", lead)

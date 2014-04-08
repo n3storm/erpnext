@@ -3,20 +3,20 @@
 
 frappe.provide("erpnext.support");
 
-frappe.ui.form.on_change("Customer Issue", "customer", function(frm) { 
+frappe.ui.form.on_change("Customer Issue", "customer", function(frm) {
 	erpnext.utils.get_party_details(frm) });
-frappe.ui.form.on_change("Customer Issue", "customer_address", 
+frappe.ui.form.on_change("Customer Issue", "customer_address",
 	erpnext.utils.get_address_display);
-frappe.ui.form.on_change("Customer Issue", "contact_person", 
-	erpnext.utils.get_contact_details);	
+frappe.ui.form.on_change("Customer Issue", "contact_person",
+	erpnext.utils.get_contact_details);
 
 erpnext.support.CustomerIssue = frappe.ui.form.Controller.extend({
 	refresh: function() {
 		if((cur_frm.doc.status=='Open' || cur_frm.doc.status == 'Work In Progress')) {
 			cur_frm.add_custom_button(frappe._('Make Maintenance Visit'), this.make_maintenance_visit)
 		}
-	}, 
-		
+	},
+
 	make_maintenance_visit: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.support.doctype.customer_issue.customer_issue.make_maintenance_visit",
@@ -28,8 +28,8 @@ erpnext.support.CustomerIssue = frappe.ui.form.Controller.extend({
 $.extend(cur_frm.cscript, new erpnext.support.CustomerIssue({frm: cur_frm}));
 
 cur_frm.cscript.onload = function(doc,cdt,cdn){
-	if(!doc.status) 
-		set_multiple(dt,dn,{status:'Open'}); 
+	if(!doc.status)
+		set_multiple(dt,dn,{status:'Open'});
 }
 
 cur_frm.fields_dict['customer_address'].get_query = function(doc, cdt, cdn) {
@@ -74,14 +74,14 @@ cur_frm.fields_dict['item_code'].get_query = function(doc, cdt, cdn) {
 	if(doc.serial_no) {
 		return{
 			filters:{ 'serial_no': doc.serial_no}
-		}		
+		}
 	}
 	else{
 		return{
 			filters:[
 				['Item', 'docstatus', '!=', 2]
 			]
-		}		
+		}
 	}
 }
 

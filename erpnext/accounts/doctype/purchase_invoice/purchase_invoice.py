@@ -12,7 +12,7 @@ from erpnext.setup.utils import get_company_currency
 import frappe.defaults
 
 from erpnext.controllers.buying_controller import BuyingController
-from erpnext.accounts.party import get_party_account, get_due_date
+from erpnext.contacts.doctype.party.party import get_party_account, get_due_date
 
 class PurchaseInvoice(BuyingController):
 	tname = 'Purchase Invoice Item'

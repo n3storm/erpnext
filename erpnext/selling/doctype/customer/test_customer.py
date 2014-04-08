@@ -14,7 +14,7 @@ test_records = frappe.get_test_records('Customer')
 
 class TestCustomer(unittest.TestCase):
 	def test_party_details(self):
-		from erpnext.accounts.party import get_party_details
+		from erpnext.contacts.doctype.party.party import get_party_details
 		
 		to_check = {
 			'address_display': '_Test Address Line 1\n_Test City\nIndia\nPhone: +91 0000000000', 

@@ -13,7 +13,7 @@ frappe.provide("erpnext.accounts");
 erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 	onload: function() {
 		this._super();
-		
+
 		if(!this.frm.doc.__islocal) {
 			// show credit_to in print format
 			if(!this.frm.doc.supplier && this.frm.doc.credit_to) {
@@ -21,15 +21,15 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 			}
 		}
 	},
-	
+
 	refresh: function(doc) {
 		this._super();
-		
+
 		// Show / Hide button
 		if(doc.docstatus==1 && doc.outstanding_amount > 0)
 			this.frm.add_custom_button(frappe._('Make Payment Entry'), this.make_bank_voucher);
 
-		if(doc.docstatus==1) { 
+		if(doc.docstatus==1) {
 			cur_frm.appframe.add_button(frappe._('View Ledger'), function() {
 				frappe.route_options = {
 					"voucher_no": doc.name,
@@ -43,7 +43,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 		}
 
 		if(doc.docstatus===0) {
-			cur_frm.add_custom_button(frappe._('From Purchase Order'), 
+			cur_frm.add_custom_button(frappe._('From Purchase Order'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_invoice",
@@ -58,7 +58,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 					})
 				});
 
-			cur_frm.add_custom_button(frappe._('From Purchase Receipt'), 
+			cur_frm.add_custom_button(frappe._('From Purchase Receipt'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.stock.doctype.purchase_receipt.purchase_receipt.make_purchase_invoice",
@@ -69,8 +69,8 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 							company: cur_frm.doc.company
 						}
 					})
-				});	
-			
+				});
+
 		}
 
 		this.is_opening(doc);
@@ -79,8 +79,8 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 	supplier: function() {
 		if(this.frm.updating_party_details)
 			return;
-		erpnext.utils.get_party_details(this.frm, 
-			"erpnext.accounts.party.get_party_details", {
+		erpnext.utils.get_party_details(this.frm,
+			"erpnext.contacts.doctype.party.party.get_party_details", {
 				posting_date: this.frm.doc.posting_date,
 				party: this.frm.doc.supplier,
 				party_type: "Supplier",
@@ -88,25 +88,25 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 				price_list: this.frm.doc.buying_price_list,
 			})
 	},
-	
+
 	credit_to: function() {
 		this.supplier();
 	},
-	
+
 	write_off_amount: function() {
 		this.calculate_outstanding_amount();
 		this.frm.refresh_fields();
 	},
-	
+
 	allocated_amount: function() {
 		this.calculate_total_advance("Purchase Invoice", "advance_allocation_details");
 		this.frm.refresh_fields();
-	}, 
+	},
 
 	tc_name: function() {
 		this.get_terms();
 	},
-	
+
 	entries_add: function(doc, cdt, cdn) {
 		var row = frappe.get_doc(cdt, cdn);
 		this.frm.script_manager.copy_from_first_row("entries", row, ["expense_account", "cost_center"]);
@@ -143,16 +143,16 @@ cur_frm.fields_dict['supplier_address'].get_query = function(doc, cdt, cdn) {
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return{
 		filters:{'supplier':  doc.supplier}
-	}	
+	}
 }
 
 cur_frm.fields_dict['entries'].grid.get_field("item_code").get_query = function(doc, cdt, cdn) {
 	return {
 		query: "erpnext.controllers.queries.item_query",
 		filters:{
-			'is_purchase_item': 'Yes'	
+			'is_purchase_item': 'Yes'
 		}
-	}	 
+	}
 }
 
 cur_frm.fields_dict['credit_to'].get_query = function(doc) {
@@ -162,7 +162,7 @@ cur_frm.fields_dict['credit_to'].get_query = function(doc) {
 			'group_or_ledger': 'Ledger',
 			'company': doc.company
 		}
-	}	
+	}
 }
 
 // Get Print Heading
@@ -171,7 +171,7 @@ return{
 		filters:[
 			['Print Heading', 'docstatus', '!=', 2]
 		]
-	}	
+	}
 }
 
 cur_frm.set_query("expense_account", "entries", function(doc) {
@@ -194,7 +194,7 @@ cur_frm.cscript.expense_account = function(doc, cdt, cdn){
 
 cur_frm.fields_dict["entries"].grid.get_field("cost_center").get_query = function(doc) {
 	return {
-		filters: { 
+		filters: {
 			'company': doc.company,
 			'group_or_ledger': 'Ledger'
 		}
@@ -218,7 +218,7 @@ cur_frm.fields_dict['entries'].grid.get_field('project_name').get_query = functi
 		filters:[
 			['Project', 'status', 'not in', 'Completed, Cancelled']
 		]
-	}	
+	}
 }
 
 

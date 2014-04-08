@@ -33,7 +33,7 @@ class SellingController(StockController):
 
 	def set_missing_lead_customer_details(self):
 		if getattr(self, "customer", None):
-			from erpnext.accounts.party import _get_party_details
+			from erpnext.contacts.doctype.party.party import _get_party_details
 			self.update_if_missing(_get_party_details(self.customer,
 				ignore_permissions=getattr(self, "ignore_permissions", None)))
 
