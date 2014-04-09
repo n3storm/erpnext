@@ -119,8 +119,122 @@ def execute():
 			ELSE ''
 		END""")
 
+
+
 def create_party_group(args):
 	party_group = frappe.new_doc("Party Group")
 	for key in args:
 		party_group[key] = args[key]
 	party_group.insert()
+
+
+def migrate_all_party_link_fields():
+	fields_map = {
+		"C-Form": {
+			"customer": "party"
+		},
+		"POS Setting": {
+			"customer": "party"
+		},
+		"C-Form": {
+			"customer": "party"
+		},
+		"Sales Invoice": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Quotation": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Sales Order": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Delivery Note": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Sales Invoice Item": {
+			"customer_item_code": "party_item_code",
+		},
+		"Quotation Item": {
+			"customer_item_code": "party_item_code",
+		},
+		"Sales Order Item": {
+			"customer_item_code": "party_item_code",
+		},
+		"Delivery Note Item": {
+			"customer_item_code": "party_item_code",
+		},
+		"Project": {
+			"customer": "party"
+		},
+		"Installation Note": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Customer Issue": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Maintenance Schedule": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address"
+		},
+		"Maintenance Visit": {
+			"customer": "party",
+			"customer_name": "party_name",
+			"customer_group": "party_group",
+			"customer_address": "party_address",
+			"customer_feedback": "party_feedback"
+		},
+		"Lead": {
+			"customer": "party"
+		},
+		"Support Ticket": {
+			"customer": "party",
+			"customer_name": "party_name"
+		},
+		"Supplier Quotation": {
+			"supplier": "party",
+			"supplier_name": "party_name",
+			"supplier_address": "party_address",
+		},
+		"Purchase Order": {
+			"supplier": "party",
+			"supplier_name": "party_name",
+			"supplier_address": "party_address",
+		},
+		"Purchase Invoice": {
+			"supplier": "party",
+			"supplier_name": "party_name",
+			"supplier_address": "party_address",
+		},
+		"Purchase Receipt": {
+			"supplier": "party",
+			"supplier_name": "party_name",
+			"supplier_address": "party_address",
+		},
+	}
+
+
+# to do
+#------------------
+# party naming by
+# Contact Control
+# customer code in item master

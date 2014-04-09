@@ -246,18 +246,18 @@ def set_account_and_due_date(party, account, party_type, company, posting_date):
 	}
 	return out
 
-# def get_party_account(company, party, party_type):
-# 	if not company:
-# 		frappe.throw(_("Please select company first."))
-#
-# 	if party:
-# 		acc_head = frappe.db.get_value("Account", {"master_name":party,
-# 			"master_type": party_type, "company": company})
-#
-# 		if not acc_head:
-# 			create_party_account(party, party_type, company)
-#
-# 		return acc_head
+def get_party_account(company, party, party_type):
+	if not company:
+		frappe.throw(_("Please select company first."))
+
+	if party:
+		acc_head = frappe.db.get_value("Account", {"master_name":party,
+			"master_type": party_type, "company": company})
+
+		if not acc_head:
+			create_party_account(party, party_type, company)
+
+		return acc_head
 
 def get_due_date(posting_date, party, party_type, account, company):
 	"""Set Due Date = Posting Date + Credit Days"""

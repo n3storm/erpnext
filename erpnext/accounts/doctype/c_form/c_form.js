@@ -6,8 +6,8 @@
 cur_frm.fields_dict.invoice_details.grid.get_field("invoice_no").get_query = function(doc) {
 	return {
 		filters: {
-			"docstatus": 1, 
-			"customer": doc.customer,
+			"docstatus": 1,
+			"party": doc.party,
 			"company": doc.company,
 			"c_form_applicable": 'Yes',
 			"c_form_no": ''
