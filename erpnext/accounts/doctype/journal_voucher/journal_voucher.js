@@ -36,20 +36,21 @@ erpnext.accounts.JournalVoucher = frappe.ui.form.Controller.extend({
 			});
 		});
 
-		$.each([["against_voucher", "Purchase Invoice", "credit_to"],
-			["against_invoice", "Sales Invoice", "debit_to"]], function(i, opts) {
+		$.each([["against_voucher", "Purchase Invoice"], ["against_invoice", "Sales Invoice"]],
+			function(i, opts) {
 				me.frm.set_query(opts[0], "entries", function(doc, cdt, cdn) {
 					var jvd = frappe.get_doc(cdt, cdn);
 					frappe.model.validate_missing(jvd, "account");
 					return {
 						filters: [
-							[opts[1], opts[2], "=", jvd.account],
+							[opts[1], "party", "=", jvd.party],
 							[opts[1], "docstatus", "=", 1],
 							[opts[1], "outstanding_amount", ">", 0]
 						]
 					};
 				});
-		});
+			}
+		);
 
 		this.frm.set_query("against_jv", "entries", function(doc, cdt, cdn) {
 			var jvd = frappe.get_doc(cdt, cdn);
@@ -65,36 +66,31 @@ erpnext.accounts.JournalVoucher = frappe.ui.form.Controller.extend({
 	against_voucher: function(doc, cdt, cdn) {
 		var d = frappe.get_doc(cdt, cdn);
 		if (d.against_voucher && !flt(d.debit)) {
-			this.get_outstanding({
-				'doctype': 'Purchase Invoice',
-				'docname': d.against_voucher
-			}, d)
+			this.get_outstanding('Purchase Invoice', d.against_voucher, d)
 		}
 	},
 
 	against_invoice: function(doc, cdt, cdn) {
 		var d = frappe.get_doc(cdt, cdn);
 		if (d.against_invoice && !flt(d.credit)) {
-			this.get_outstanding({
-				'doctype': 'Sales Invoice',
-				'docname': d.against_invoice
-			}, d)
+			this.get_outstanding('Sales Invoice', d.against_invoice, d)
 		}
 	},
 
 	against_jv: function(doc, cdt, cdn) {
 		var d = frappe.get_doc(cdt, cdn);
-		if (d.against_jv && !flt(d.credit) && !flt(d.debit)) {
-			this.get_outstanding({
-				'doctype': 'Journal Voucher',
-				'docname': d.against_jv,
-				'account': d.account
-			}, d)
+		if (d.against_jv && d.party && !flt(d.credit) && !flt(d.debit)) {
+			this.get_outstanding('Journal Voucher', d.against_jv, d)
 		}
 	},
 
-	get_outstanding: function(args, child) {
+	get_outstanding: function(doctype, docname, child) {
 		var me = this;
+		args = {
+			"doctype": doctype,
+			"docname": docname,
+			"party": child.party
+		}
 		return this.frm.call({
 			child: child,
 			method: "get_outstanding",

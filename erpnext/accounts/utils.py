@@ -181,6 +181,7 @@ def update_against_doc(d, jv_obj):
 		# new entry with balance amount
 		ch = jv_obj.append("entries")
 		ch.account = d['account']
+		ch.party = d['party']
 		ch.cost_center = cstr(jvd[0][0])
 		ch.balance = cstr(jvd[0][1])
 		ch.set(d['dr_or_cr'], flt(d['unadjusted_amt']) - flt(d['allocated_amt']))

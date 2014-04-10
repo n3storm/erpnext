@@ -596,12 +596,8 @@ class StockEntry(StockController):
 
 @frappe.whitelist()
 def get_party_details(ref_dt, ref_dn):
-	if ref_dt in ["Delivery Note", "Sales Invoice"]:
-		res = frappe.db.get_value(ref_dt, ref_dn,
-			["customer", "customer_name", "address_display as customer_address"], as_dict=1)
-	else:
-		res = frappe.db.get_value(ref_dt, ref_dn,
-			["supplier", "supplier_name", "address_display as supplier_address"], as_dict=1)
+	res = frappe.db.get_value(ref_dt, ref_dn,
+			["party", "party_name", "address_display as party_address"], as_dict=1)
 	return res or {}
 
 @frappe.whitelist()
@@ -616,22 +612,21 @@ def query_sales_return_doc(doctype, txt, searchfield, start, page_len, filters):
 	if doctype == "Sales Invoice":
 		conditions = "and update_stock=1"
 
-	return frappe.db.sql("""select name, customer, customer_name
+	return frappe.db.sql("""select name, party, party_name
 		from `tab%s` where docstatus = 1
 			and (`%s` like %%(txt)s
-				or `customer` like %%(txt)s) %s %s
-		order by name, customer, customer_name
+				or `party` like %%(txt)s) %s %s
+		order by name, party, party_name
 		limit %s""" % (doctype, searchfield, conditions,
 		get_match_cond(doctype), "%(start)s, %(page_len)s"),
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 		as_list=True)
 
 def query_purchase_return_doc(doctype, txt, searchfield, start, page_len, filters):
-	return frappe.db.sql("""select name, supplier, supplier_name
+	return frappe.db.sql("""select name, party, party_name
 		from `tab%s` where docstatus = 1
-			and (`%s` like %%(txt)s
-				or `supplier` like %%(txt)s) %s
-		order by name, supplier, supplier_name
+			and (`%s` like %%(txt)s or `party` like %%(txt)s) %s
+		order by name, party, party_name
 		limit %s""" % (doctype, searchfield, get_match_cond(doctype),
 		"%(start)s, %(page_len)s"),	{"txt": "%%%s%%" % txt, "start":
 		start, "page_len": page_len}, as_list=True)
@@ -774,6 +769,7 @@ def make_return_jv(stock_entry):
 			"doctype": "Journal Voucher Detail",
 			"parentfield": "entries",
 			"account": r.get("account"),
+			"party": r.get("party"),
 			"against_invoice": r.get("against_invoice"),
 			"against_voucher": r.get("against_voucher"),
 			"balance": get_balance_on(r.get("account"), se.posting_date) \
@@ -783,9 +779,9 @@ def make_return_jv(stock_entry):
 	return jv
 
 def make_return_jv_from_sales_invoice(se, ref):
-	# customer account entry
 	parent = {
 		"account": ref.doc.debit_to,
+		"party": ref.doc.party,
 		"against_invoice": ref.doc.name,
 	}
 
@@ -818,7 +814,7 @@ def make_return_jv_from_delivery_note(se, ref):
 		ref.doc.name)
 
 	if not invoices_against_delivery:
-		sales_orders_against_delivery = [d.against_sales_order for d in ref.doc.get_all_children() if getattr(d, "against_sales_order", None)]
+		sales_orders_against_delivery = [d.against_sales_order for d in ref.doc.get_all_children() if d.against_sales_order]
 
 		if sales_orders_against_delivery:
 			invoices_against_delivery = get_invoice_list("Sales Invoice Item", "sales_order",
@@ -829,7 +825,9 @@ def make_return_jv_from_delivery_note(se, ref):
 
 	packing_item_parent_map = dict([[d.item_code, d.parent_item] for d in ref.doc.get(ref.parentfields[1])])
 
-	parent = {}
+	parent = {
+		"party": ref.doc.party
+	}
 	children = []
 
 	for se_item in se.get("mtn_details"):
@@ -851,8 +849,8 @@ def make_return_jv_from_delivery_note(se, ref):
 			if account not in children:
 				children.append(account)
 
-			if not parent:
-				parent = {"account": si.debit_to}
+			if not parent.get("account"):
+				parent.update({"account": si.debit_to})
 
 			break
 
@@ -887,7 +885,9 @@ def make_return_jv_from_purchase_receipt(se, ref):
 	if not invoice_against_receipt:
 		return []
 
-	parent = {}
+	parent = {
+		"party": ref.doc.party
+	}
 	children = []
 
 	for se_item in se.get("mtn_details"):
@@ -905,8 +905,8 @@ def make_return_jv_from_purchase_receipt(se, ref):
 			if account not in children:
 				children.append(account)
 
-			if not parent:
-				parent = {"account": pi.credit_to}
+			if not parent.get("account"):
+				parent.update({"account": pi.credit_to})
 
 			break
 

@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.utils import cstr, flt
 from frappe import msgprint
+
 from erpnext.controllers.buying_controller import BuyingController
 
 class PurchaseOrder(BuyingController):
@@ -50,7 +51,7 @@ class PurchaseOrder(BuyingController):
 		super(PurchaseOrder, self).validate_with_previous_doc(self.tname, {
 			"Supplier Quotation": {
 				"ref_dn_field": "supplier_quotation",
-				"compare_fields": [["supplier", "="], ["company", "="], ["currency", "="]],
+				"compare_fields": [["party", "="], ["company", "="], ["currency", "="]],
 			},
 			"Supplier Quotation Item": {
 				"ref_dn_field": "supplier_quotation_item",

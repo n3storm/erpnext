@@ -32,16 +32,16 @@ class TestPricingRule(unittest.TestCase):
 			"plc_conversion_rate": 1,
 			"order_type": "Sales",
 			"transaction_type": "selling",
-			"customer": "_Test Customer",
+			"party": "_Test Customer",
 		})
 
 		details = get_item_details(args)
 		self.assertEquals(details.get("discount_percentage"), 10)
 
 		prule = frappe.get_doc(test_record.copy())
-		prule.applicable_for = "Customer"
+		prule.applicable_for = "Party"
 		self.assertRaises(MandatoryError, prule.insert)
-		prule.customer = "_Test Customer"
+		prule.party = "_Test Customer"
 		prule.discount_percentage = 20
 		prule.insert()
 		details = get_item_details(args)
@@ -53,7 +53,7 @@ class TestPricingRule(unittest.TestCase):
 		prule.discount_percentage = 15
 		prule.insert()
 
-		args.customer = None
+		args.party = None
 		details = get_item_details(args)
 		self.assertEquals(details.get("discount_percentage"), 10)
 

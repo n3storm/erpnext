@@ -19,8 +19,6 @@ class AccountsController(TransactionBase):
 			self.validate_value("grand_total", ">=", 0)
 			self.set_total_in_words()
 
-		self.validate_for_freezed_account()
-
 	def set_missing_values(self, for_validate=False):
 		for fieldname in ["posting_date", "transaction_date"]:
 			if not self.get(fieldname) and self.meta.get_field(fieldname):
@@ -39,17 +37,6 @@ class AccountsController(TransactionBase):
 			if date_field and self.get(date_field):
 				validate_fiscal_year(self.get(date_field), self.fiscal_year,
 					label=self.meta.get_label(date_field))
-
-	def validate_for_freezed_account(self):
-		for fieldname in ["customer", "supplier"]:
-			if self.meta.get_field(fieldname) and self.get(fieldname):
-				accounts = frappe.db.get_values("Account",
-					{"master_type": fieldname.title(), "master_name": self.get(fieldname),
-					"company": self.company}, "name")
-				if accounts:
-					from erpnext.accounts.doctype.gl_entry.gl_entry import validate_frozen_account
-					for account in accounts:
-						validate_frozen_account(account[0])
 
 	def set_price_list_currency(self, buying_or_selling):
 		if self.meta.get_field("currency"):
@@ -118,8 +105,6 @@ class AccountsController(TransactionBase):
 		if self.get(tax_master_field):
 			if not tax_master_doctype:
 				tax_master_doctype = self.meta.get_field(tax_master_field).options
-
-			tax_doctype = self.meta.get_field(tax_parentfield).options
 
 			from frappe.model import default_fields
 			tax_master = frappe.get_doc(tax_master_doctype, self.get(tax_master_field))
@@ -385,16 +370,17 @@ class AccountsController(TransactionBase):
 		frappe.db.sql("""delete from `tab%s` where parentfield=%s and parent = %s
 			and ifnull(allocated_amount, 0) = 0""" % (childtype, '%s', '%s'), (parentfield, self.name))
 
-	def get_advances(self, account_head, child_doctype, parentfield, dr_or_cr):
+
+	def get_advances(self, account_head, party, child_doctype, parentfield, dr_or_cr):
 		res = frappe.db.sql("""select t1.name as jv_no, t1.remark,
 			t2.%s as amount, t2.name as jv_detail_no
 			from `tabJournal Voucher` t1, `tabJournal Voucher Detail` t2
-			where t1.name = t2.parent and t2.account = %s and t2.is_advance = 'Yes'
+			where t1.name = t2.parent and t2.account = %s and t2.party=%s and t2.is_advance = 'Yes'
 			and (t2.against_voucher is null or t2.against_voucher = '')
 			and (t2.against_invoice is null or t2.against_invoice = '')
 			and (t2.against_jv is null or t2.against_jv = '')
 			and t1.docstatus = 1 order by t1.posting_date""" %
-			(dr_or_cr, '%s'), account_head, as_dict=1)
+			(dr_or_cr, '%s', '%s'), (account_head, party), as_dict=1)
 
 		self.set(parentfield, [])
 		for d in res:
@@ -468,16 +454,6 @@ class AccountsController(TransactionBase):
 			self._abbr = frappe.db.get_value("Company", self.company, "abbr")
 
 		return self._abbr
-
-	def check_credit_limit(self, account):
-		total_outstanding = frappe.db.sql("""
-			select sum(ifnull(debit, 0)) - sum(ifnull(credit, 0))
-			from `tabGL Entry` where account = %s""", account)
-
-		total_outstanding = total_outstanding[0][0] if total_outstanding else 0
-		if total_outstanding:
-			frappe.get_doc('Account', account).check_credit_limit(total_outstanding)
-
 
 @frappe.whitelist()
 def get_tax_rate(account_head):

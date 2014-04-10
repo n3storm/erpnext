@@ -7,10 +7,10 @@
 frappe.provide("erpnext");
 erpnext.LeadController = frappe.ui.form.Controller.extend({
 	setup: function() {
-		this.frm.fields_dict.customer.get_query = function(doc, cdt, cdn) {
+		this.frm.fields_dict.party.get_query = function(doc, cdt, cdn) {
 				return { query: "erpnext.controllers.queries.customer_query" } }
 	},
-	
+
 	onload: function() {
 		if(cur_frm.fields_dict.lead_owner.df.options.match(/^User/)) {
 			cur_frm.fields_dict.lead_owner.get_query = function(doc, cdt, cdn) {
@@ -27,31 +27,31 @@ erpnext.LeadController = frappe.ui.form.Controller.extend({
 				<span class="help">'+frappe._('Automatically extract Leads from a mail box e.g.')+' "sales@example.com"</span></p>';
 		}
 	},
-	
+
 	refresh: function() {
 		var doc = this.frm.doc;
 		erpnext.hide_naming_series();
 		this.frm.clear_custom_buttons();
 
-		this.frm.__is_customer = this.frm.__is_customer || this.frm.doc.__is_customer;
-		if(!this.frm.doc.__islocal && !this.frm.doc.__is_customer) {
-			this.frm.add_custom_button(frappe._("Create Customer"), this.create_customer);
+		this.frm.__is_party = this.frm.__is_party || this.frm.doc.__is_party;
+		if(!this.frm.doc.__islocal && !this.frm.__is_party) {
+			this.frm.add_custom_button(frappe._("Create Customer (Party)"), this.create_party);
 			this.frm.add_custom_button(frappe._("Create Opportunity"), this.create_opportunity);
 			this.frm.appframe.add_button(frappe._("Send SMS"), this.frm.cscript.send_sms, "icon-mobile-phone");
 		}
-		
+
 		cur_frm.communication_view = new frappe.views.CommunicationList({
 			list: frappe.get_list("Communication", {"parenttype": "Lead", "parent":this.frm.doc.name}),
 			parent: this.frm.fields_dict.communication_html.wrapper,
 			doc: this.frm.doc,
 			recipients: this.frm.doc.email_id
 		});
-		
+
 		if(!this.frm.doc.__islocal) {
 			this.make_address_list();
 		}
 	},
-	
+
 	make_address_list: function() {
 		var me = this;
 		if(!this.frm.address_list) {
@@ -73,15 +73,15 @@ erpnext.LeadController = frappe.ui.form.Controller.extend({
 			// note: render_address_row is defined in contact_control.js
 		}
 		this.frm.address_list.run();
-	}, 
-	
-	create_customer: function() {
+	},
+
+	create_party: function() {
 		frappe.model.open_mapped_doc({
-			method: "erpnext.selling.doctype.lead.lead.make_customer",
+			method: "erpnext.selling.doctype.lead.lead.make_party",
 			source_name: cur_frm.doc.name
 		})
-	}, 
-	
+	},
+
 	create_opportunity: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.selling.doctype.lead.lead.make_opportunity",

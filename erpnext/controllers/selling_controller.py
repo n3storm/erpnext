@@ -32,9 +32,9 @@ class SellingController(StockController):
 			self.set_taxes("other_charges", "taxes_and_charges")
 
 	def set_missing_lead_customer_details(self):
-		if getattr(self, "customer", None):
+		if getattr(self, "party", None):
 			from erpnext.contacts.doctype.party.party import _get_party_details
-			self.update_if_missing(_get_party_details(self.customer,
+			self.update_if_missing(_get_party_details(self.party,
 				ignore_permissions=getattr(self, "ignore_permissions", None)))
 
 		elif getattr(self, "lead", None):
@@ -264,19 +264,6 @@ class SellingController(StockController):
 			msgprint(_(self.meta.get_label("order_type")) + " " +
 				_("must be one of") + ": " + comma_or(valid_types), raise_exception=True)
 
-	def check_credit(self, grand_total):
-		customer_account = frappe.db.get_value("Account", {"company": self.company,
-			"master_name": self.customer}, "name")
-		if customer_account:
-			total_outstanding = frappe.db.sql("""select
-				sum(ifnull(debit, 0)) - sum(ifnull(credit, 0))
-				from `tabGL Entry` where account = %s""", customer_account)
-			total_outstanding = total_outstanding[0][0] if total_outstanding else 0
-
-			outstanding_including_current = flt(total_outstanding) + flt(grand_total)
-			frappe.get_doc('Account', customer_account).run_method("check_credit_limit",
-				outstanding_including_current)
-
 	def validate_max_discount(self):
 		for d in self.get(self.fname):
 			discount = flt(frappe.db.get_value("Item", d.item_code, "max_discount"))
@@ -300,7 +287,7 @@ class SellingController(StockController):
 				if flt(d.qty) > flt(d.delivered_qty):
 					reserved_qty_for_main_item = flt(d.qty) - flt(d.delivered_qty)
 
-			elif self.doctype == "Delivery Note" and d.against_sales_order:
+			if self.doctype == "Delivery Note" and d.against_sales_order:
 				# if SO qty is 10 and there is tolerance of 20%, then it will allow DN of 12.
 				# But in this case reserved qty should only be reduced by 10 and not 12
 

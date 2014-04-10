@@ -334,7 +334,7 @@ cur_frm.fields_dict.write_off_cost_center.get_query = function(doc) {
 cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
 	return{
 		query: "erpnext.controllers.queries.get_project_name",
-		filters: {'customer': doc.customer}
+		filters: {'party': doc.party}
 	}
 }
 

@@ -23,21 +23,10 @@ frappe.query_reports["Item-wise Purchase Register"] = {
 			"options": "Item",
 		},
 		{
-			"fieldname":"account",
-			"label": frappe._("Account"),
+			"fieldname":"party",
+			"label": frappe._("Party"),
 			"fieldtype": "Link",
-			"options": "Account",
-			"get_query": function() {
-				var company = frappe.query_report.filters_by_name.company.get_value();
-				return {
-					"query": "accounts.utils.get_account_list", 
-					"filters": {
-						"report_type": "Balance Sheet",
-						"company": company,
-						"master_type": "Supplier"
-					}
-				}
-			}
+			"options": "Party",
 		},
 		{
 			"fieldname":"company",

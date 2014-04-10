@@ -11,43 +11,25 @@ class Contact(StatusUpdater):
 
 	def autoname(self):
 		# concat first and last name
-		self.name = " ".join(filter(None, 
+		self.name = " ".join(filter(None,
 			[cstr(self.get(f)).strip() for f in ["first_name", "last_name"]]))
-		
-		# concat party name if reqd
-		for fieldname in ("customer", "supplier", "sales_partner"):
-			if self.get(fieldname):
-				self.name = self.name + "-" + cstr(self.get(fieldname)).strip()
+
+		if self.get("party"):
+				self.name = self.name + "-" + cstr(self.party).strip()
 				break
-		
+
 	def validate(self):
 		self.set_status()
 		self.validate_primary_contact()
 
 	def validate_primary_contact(self):
 		if self.is_primary_contact == 1:
-			if self.customer:
-				frappe.db.sql("update tabContact set is_primary_contact=0 where customer = %s", 
-					(self.customer))
-			elif self.supplier:
-				frappe.db.sql("update tabContact set is_primary_contact=0 where supplier = %s", 
-					 (self.supplier))	
-			elif self.sales_partner:
-				frappe.db.sql("""update tabContact set is_primary_contact=0 
-					where sales_partner = %s""", (self.sales_partner))
+			if self.party:
+				frappe.db.sql("update tabContact set is_primary_contact=0 where party = %s", (self.party))
 		else:
-			if self.customer:
+			if self.party:
 				if not frappe.db.sql("select name from tabContact \
-						where is_primary_contact=1 and customer = %s", (self.customer)):
-					self.is_primary_contact = 1
-			elif self.supplier:
-				if not frappe.db.sql("select name from tabContact \
-						where is_primary_contact=1 and supplier = %s", (self.supplier)):
-					self.is_primary_contact = 1
-			elif self.sales_partner:
-				if not frappe.db.sql("select name from tabContact \
-						where is_primary_contact=1 and sales_partner = %s", 
-						self.sales_partner):
+						where is_primary_contact=1 and party = %s", (self.party)):
 					self.is_primary_contact = 1
 
 	def on_trash(self):
@@ -59,7 +41,7 @@ def get_contact_details(contact):
 	contact = frappe.get_doc("Contact", contact)
 	out = {
 		"contact_person": contact.get("name"),
-		"contact_display": " ".join(filter(None, 
+		"contact_display": " ".join(filter(None,
 			[contact.get("first_name"), contact.get("last_name")])),
 		"contact_email": contact.get("email_id"),
 		"contact_mobile": contact.get("mobile_no"),
@@ -67,5 +49,5 @@ def get_contact_details(contact):
 		"contact_designation": contact.get("designation"),
 		"contact_department": contact.get("department")
 	}
-	
+
 	return out

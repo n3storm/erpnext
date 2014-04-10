@@ -279,11 +279,11 @@ def create_customers(args):
 		if customer:
 			frappe.get_doc({
 				"doctype":"Customer",
-				"customer_name": customer,
-				"customer_type": "Company",
-				"customer_group": "Commercial",
+				"customer": 1,
+				"party_name": customer,
+				"party_type": "Company",
+				"party_group": "Commercial",
 				"territory": args.get("country"),
-				"company": args.get("company_name")
 			}).insert()
 
 			if args.get("customer_contact_" + str(i)):
@@ -300,17 +300,17 @@ def create_suppliers(args):
 		supplier = args.get("supplier_" + str(i))
 		if supplier:
 			frappe.get_doc({
-				"doctype":"Supplier",
-				"supplier_name": supplier,
-				"supplier_type": "Local",
-				"company": args.get("company_name")
+				"doctype":"Party",
+				'supplier': 1,
+				"party_name": supplier,
+				"party_group": "Local",
 			}).insert()
 
 			if args.get("supplier_contact_" + str(i)):
 				contact = args.get("supplier_contact_" + str(i)).split(" ")
 				frappe.get_doc({
 					"doctype":"Contact",
-					"supplier": supplier,
+					"party": supplier,
 					"first_name":contact[0],
 					"last_name": len(contact) > 1 and contact[1] or ""
 				}).insert()

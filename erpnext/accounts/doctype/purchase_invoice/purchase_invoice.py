@@ -3,16 +3,12 @@
 
 from __future__ import unicode_literals
 import frappe
-
 from frappe.utils import cint, cstr, flt, formatdate
-
 from frappe import msgprint, _
 from erpnext.setup.utils import get_company_currency
-
 import frappe.defaults
 
 from erpnext.controllers.buying_controller import BuyingController
-from erpnext.contacts.doctype.party.party import get_party_account, get_due_date
 
 class PurchaseInvoice(BuyingController):
 	tname = 'Purchase Invoice Item'
@@ -45,7 +41,6 @@ class PurchaseInvoice(BuyingController):
 		self.validate_bill_no()
 		self.validate_credit_acc()
 		self.clear_unallocated_advances("Purchase Invoice Advance", "advance_allocation_details")
-		self.check_for_acc_head_of_supplier()
 		self.check_for_stopped_status()
 		self.validate_with_previous_doc()
 		self.validate_uom_is_integer("uom", "qty")
@@ -59,15 +54,15 @@ class PurchaseInvoice(BuyingController):
 
 	def set_missing_values(self, for_validate=False):
 		if not self.credit_to:
-			self.credit_to = get_party_account(self.company, self.supplier, "Supplier")
+			self.credit_to = frappe.db.get_value("Company", self.company, "default_payable_account")
 		if not self.due_date:
-			self.due_date = get_due_date(self.posting_date, self.supplier, "Supplier",
-				self.credit_to, self.company)
+			from erpnext.contacts.doctype.party.party import get_due_date
+			self.due_date = get_due_date(self.posting_date, self.party, self.company)
 
 		super(PurchaseInvoice, self).set_missing_values(for_validate)
 
 	def get_advances(self):
-		super(PurchaseInvoice, self).get_advances(self.credit_to,
+		super(PurchaseInvoice, self).get_advances(self.credit_to, self.party,
 			"Purchase Invoice Advance", "advance_allocation_details", "debit")
 
 	def check_active_purchase_items(self):
@@ -94,8 +89,8 @@ class PurchaseInvoice(BuyingController):
 		if self.bill_no and self.bill_no.lower().strip() \
 				not in ['na', 'not applicable', 'none']:
 			b_no = frappe.db.sql("""select bill_no, name, ifnull(is_opening,'') from `tabPurchase Invoice`
-				where bill_no = %s and credit_to = %s and docstatus = 1 and name != %s""",
-				(self.bill_no, self.credit_to, self.name))
+				where bill_no = %s and credit_to = %s and party=%s and docstatus = 1 and name != %s""",
+				(self.bill_no, self.credit_to, self.party, self.name))
 			if b_no and cstr(b_no[0][2]) == cstr(self.is_opening):
 				msgprint("Please check you have already booked expense against Bill No. %s \
 					in Purchase Invoice %s" % (cstr(b_no[0][0]), cstr(b_no[0][1])),
@@ -112,17 +107,6 @@ class PurchaseInvoice(BuyingController):
 		if frappe.db.get_value("Account", self.credit_to, "report_type") != "Balance Sheet":
 			frappe.throw(_("Account must be a balance sheet account"))
 
-	# Validate Acc Head of Supplier and Credit To Account entered
-	# ------------------------------------------------------------
-	def check_for_acc_head_of_supplier(self):
-		if self.supplier and self.credit_to:
-			acc_head = frappe.db.sql("select master_name from `tabAccount` where name = %s", self.credit_to)
-
-			if (acc_head and cstr(acc_head[0][0]) != cstr(self.supplier)) or (not acc_head and (self.credit_to != cstr(self.supplier) + " - " + self.company_abbr)):
-				msgprint("Credit To: %s do not match with Supplier: %s for Company: %s.\n If both correctly entered, please select Master Type and Master Name in account master." %(self.credit_to,self.supplier,self.company), raise_exception=1)
-
-	# Check for Stopped PO
-	# ---------------------
 	def check_for_stopped_status(self):
 		check_list = []
 		for d in self.get('entries'):
@@ -137,7 +121,7 @@ class PurchaseInvoice(BuyingController):
 		super(PurchaseInvoice, self).validate_with_previous_doc(self.tname, {
 			"Purchase Order": {
 				"ref_dn_field": "purchase_order",
-				"compare_fields": [["supplier", "="], ["company", "="], ["currency", "="]],
+				"compare_fields": [["party", "="], ["company", "="], ["currency", "="]],
 			},
 			"Purchase Order Item": {
 				"ref_dn_field": "po_detail",
@@ -147,7 +131,7 @@ class PurchaseInvoice(BuyingController):
 			},
 			"Purchase Receipt": {
 				"ref_dn_field": "purchase_receipt",
-				"compare_fields": [["supplier", "="], ["company", "="], ["currency", "="]],
+				"compare_fields": [["party", "="], ["company", "="], ["currency", "="]],
 			},
 			"Purchase Receipt Item": {
 				"ref_dn_field": "pr_detail",
@@ -255,6 +239,7 @@ class PurchaseInvoice(BuyingController):
 					'against_voucher_type' : 'Purchase Invoice',
 					'against_voucher'  : self.name,
 					'account' : self.credit_to,
+					'party': self.party,
 					'is_advance' : 'Yes',
 					'dr_or_cr' : 'debit',
 					'unadjusted_amt' : flt(d.advance_amount),
@@ -291,6 +276,7 @@ class PurchaseInvoice(BuyingController):
 					"account": self.credit_to,
 					"against": self.against_expense_account,
 					"credit": self.total_amount_to_pay,
+					"party": self.party,
 					"remarks": self.remarks,
 					"against_voucher": self.name,
 					"against_voucher_type": self.doctype,
@@ -428,8 +414,6 @@ def get_expense_account(doctype, txt, searchfield, start, page_len, filters):
 					or tabAccount.account_type = "Expense Account")
 				and tabAccount.group_or_ledger="Ledger"
 				and tabAccount.docstatus!=2
-				and ifnull(tabAccount.master_type, "")=""
-				and ifnull(tabAccount.master_name, "")=""
 				and tabAccount.company = '%(company)s'
 				and tabAccount.%(key)s LIKE '%(txt)s'
 				%(mcond)s""" % {'company': filters['company'], 'key': searchfield,

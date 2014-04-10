@@ -4,14 +4,9 @@
 from __future__ import unicode_literals
 import frappe
 import frappe.defaults
-
-from frappe.utils import add_days, cint, cstr, date_diff, flt, getdate, nowdate, \
-	get_first_day, get_last_day, comma_and
+from frappe.utils import add_days, cint, cstr, date_diff, flt, getdate, nowdate, get_first_day, get_last_day, comma_and
 from frappe.model.naming import make_autoname
 from frappe import _, msgprint
-
-from erpnext.accounts.party import get_party_account, get_due_date
-from erpnext.controllers.stock_controller import update_gl_entries_after
 
 month_map = {'Monthly': 1, 'Quarterly': 3, 'Half-yearly': 6, 'Yearly': 12}
 
@@ -46,7 +41,6 @@ class SalesInvoice(SellingController):
 		self.validate_with_previous_doc()
 		self.validate_uom_is_integer("stock_uom", "qty")
 		self.check_stop_sales_order("sales_order")
-		self.validate_customer_account()
 		self.validate_debit_acc()
 		self.validate_fixed_asset_account()
 		self.clear_unallocated_advances("Sales Invoice Advance", "advance_adjustment_details")
@@ -89,7 +83,7 @@ class SalesInvoice(SellingController):
 
 		# this sequence because outstanding may get -ve
 		self.make_gl_entries()
-		self.check_credit_limit(self.debit_to)
+		frappe.get_doc("Party", self.party).check_credit_limit(self.company)
 
 		if not cint(self.is_pos) == 1:
 			self.update_against_document_in_jv()
@@ -145,11 +139,11 @@ class SalesInvoice(SellingController):
 	def set_missing_values(self, for_validate=False):
 		self.set_pos_fields(for_validate)
 
-		if not self.debit_to:
-			self.debit_to = get_party_account(self.company, self.customer, "Customer")
+		if not self.debit_to and self.company:
+			self.debit_to = frappe.db.get_value("Company", self.company, "default_receivable_account")
 		if not self.due_date:
-			self.due_date = get_due_date(self.posting_date, self.customer, "Customer",
-				self.debit_to, self.company)
+			from erpnext.contacts.doctype.party.party import get_due_date
+			self.due_date = get_due_date(self.posting_date, self.party, self.company)
 
 		super(SalesInvoice, self).set_missing_values(for_validate)
 
@@ -177,9 +171,8 @@ class SalesInvoice(SellingController):
 		pos = get_pos_settings(self.company)
 
 		if pos:
-			if not for_validate and not self.customer:
-				self.customer = pos.customer
-				# self.set_customer_defaults()
+			if not for_validate and not self.party:
+				self.party = pos.party
 
 			for fieldname in ('territory', 'naming_series', 'currency', 'taxes_and_charges', 'letter_head', 'tc_name',
 				'selling_price_list', 'company', 'select_print_heading', 'cash_bank_account'):
@@ -207,7 +200,7 @@ class SalesInvoice(SellingController):
 				self.set_taxes("other_charges", "taxes_and_charges")
 
 	def get_advances(self):
-		super(SalesInvoice, self).get_advances(self.debit_to,
+		super(SalesInvoice, self).get_advances(self.debit_to, self.party,
 			"Sales Invoice Advance", "advance_adjustment_details", "credit")
 
 	def get_company_abbr(self):
@@ -230,6 +223,7 @@ class SalesInvoice(SellingController):
 					'against_voucher_type' : 'Sales Invoice',
 					'against_voucher'  : self.name,
 					'account' : self.debit_to,
+					'party': self.party,
 					'is_advance' : 'Yes',
 					'dr_or_cr' : 'credit',
 					'unadjusted_amt' : flt(d.advance_amount),
@@ -240,17 +234,6 @@ class SalesInvoice(SellingController):
 		if lst:
 			from erpnext.accounts.utils import reconcile_against_document
 			reconcile_against_document(lst)
-
-	def validate_customer_account(self):
-		"""Validates Debit To Account and Customer Matches"""
-		if self.customer and self.debit_to and not cint(self.is_pos):
-			acc_head = frappe.db.sql("select master_name from `tabAccount` where name = %s and docstatus != 2", self.debit_to)
-
-			if (acc_head and cstr(acc_head[0][0]) != cstr(self.customer)) or \
-				(not acc_head and (self.debit_to != cstr(self.customer) + " - " + self.get_company_abbr())):
-				msgprint("Debit To: %s do not match with Customer: %s for Company: %s.\n If both correctly entered, please select Master Type \
-					and Master Name in account master." %(self.debit_to, self.customer,self.company), raise_exception=1)
-
 
 	def validate_debit_acc(self):
 		if frappe.db.get_value("Account", self.debit_to, "report_type") != "Balance Sheet":
@@ -273,12 +256,12 @@ class SalesInvoice(SellingController):
 		super(SalesInvoice, self).validate_with_previous_doc(self.tname, {
 			"Sales Order": {
 				"ref_dn_field": "sales_order",
-				"compare_fields": [["customer", "="], ["company", "="], ["project_name", "="],
+				"compare_fields": [["party", "="], ["company", "="], ["project_name", "="],
 					["currency", "="]],
 			},
 			"Delivery Note": {
 				"ref_dn_field": "delivery_note",
-				"compare_fields": [["customer", "="], ["company", "="], ["project_name", "="],
+				"compare_fields": [["party", "="], ["company", "="], ["project_name", "="],
 					["currency", "="]],
 			},
 		})
@@ -332,14 +315,15 @@ class SalesInvoice(SellingController):
 
 
 	def validate_proj_cust(self):
-		"""check for does customer belong to same project as entered.."""
-		if self.project_name and self.customer:
+		"""check for does party belong to same project as entered.."""
+		if self.project_name and self.party:
 			res = frappe.db.sql("""select name from `tabProject`
-				where name = %s and (customer = %s or
-					ifnull(customer,'')='')""", (self.project_name, self.customer))
+				where name = %s and (party = %s or
+					ifnull(party,'')='')""", (self.project_name, self.party))
 			if not res:
-				msgprint("Customer - %s does not belong to project - %s. \n\nIf you want to use project for multiple customers then please make customer details blank in that project."%(self.customer,self.project_name))
-				raise Exception
+				frappe.throw("""Party - %s does not belong to project - %s. \n
+					If you want to use project for multiple parties then please make party details \
+					blank in that project.""" % (self.party, self.project_name))
 
 	def validate_pos(self):
 		if not self.cash_bank_account and flt(self.paid_amount):
@@ -473,6 +457,8 @@ class SalesInvoice(SellingController):
 			if repost_future_gle and cint(self.update_stock) \
 				and cint(frappe.defaults.get_global_default("auto_accounting_for_stock")):
 					items, warehouse_account = self.get_items_and_warehouse_accounts()
+
+					from controllers.stock_controller import update_gl_entries_after
 					update_gl_entries_after(self.posting_date, self.posting_time,
 						warehouse_account, items)
 
@@ -481,7 +467,7 @@ class SalesInvoice(SellingController):
 
 		gl_entries = []
 
-		self.make_customer_gl_entry(gl_entries)
+		self.make_party_gl_entry(gl_entries)
 
 		self.make_tax_gl_entries(gl_entries)
 
@@ -494,13 +480,14 @@ class SalesInvoice(SellingController):
 
 		return gl_entries
 
-	def make_customer_gl_entry(self, gl_entries):
+	def make_party_gl_entry(self, gl_entries):
 		if self.grand_total:
 			gl_entries.append(
 				self.get_gl_dict({
 					"account": self.debit_to,
 					"against": self.against_income_account,
 					"debit": self.grand_total,
+					"party": self.party,
 					"remarks": self.remarks,
 					"against_voucher": self.name,
 					"against_voucher_type": self.doctype,
@@ -547,6 +534,7 @@ class SalesInvoice(SellingController):
 					"account": self.debit_to,
 					"against": self.cash_bank_account,
 					"credit": self.paid_amount,
+					"party": self.party,
 					"remarks": self.remarks,
 					"against_voucher": self.name,
 					"against_voucher_type": self.doctype,
@@ -567,6 +555,7 @@ class SalesInvoice(SellingController):
 						"account": self.debit_to,
 						"against": self.write_off_account,
 						"credit": self.write_off_amount,
+						"party": self.party,
 						"remarks": self.remarks,
 						"against_voucher": self.name,
 						"against_voucher_type": self.doctype,
@@ -683,7 +672,7 @@ def manage_recurring_invoices(next_date=None, commit=True):
 					frappe.db.begin()
 					frappe.db.sql("update `tabSales Invoice` set \
 						convert_into_recurring_invoice = 0 where name = %s", ref_invoice)
-					notify_errors(ref_invoice, ref_wrapper.customer, ref_wrapper.owner)
+					notify_errors(ref_invoice, ref_wrapper.party, ref_wrapper.owner)
 					frappe.db.commit()
 
 				exception_list.append(frappe.get_traceback())
@@ -737,7 +726,7 @@ def send_notification(new_rv):
 		subject="New Invoice : " + new_rv.name,
 		message = get_html(new_rv, new_rv, "SalesInvoice"))
 
-def notify_errors(inv, customer, owner):
+def notify_errors(inv, party, owner):
 	from frappe.utils.user import get_system_managers
 	recipients=get_system_managers()
 
@@ -745,7 +734,7 @@ def notify_errors(inv, customer, owner):
 		subject="[Urgent] Error while creating recurring invoice for %s" % inv,
 		message = frappe.get_template("template/emails/recurring_invoice_failed.html").render({
 			"name": inv,
-			"customer": customer
+			"party": party
 		}))
 
 	assign_task_to_owner(inv, "Recurring Invoice Failed", recipients)
@@ -783,8 +772,6 @@ def get_income_account(doctype, txt, searchfield, start, page_len, filters):
 					or tabAccount.account_type = "Income Account")
 				and tabAccount.group_or_ledger="Ledger"
 				and tabAccount.docstatus!=2
-				and ifnull(tabAccount.master_type, "")=""
-				and ifnull(tabAccount.master_name, "")=""
 				and tabAccount.company = '%(company)s'
 				and tabAccount.%(key)s LIKE '%(txt)s'
 				%(mcond)s""" % {'company': filters['company'], 'key': searchfield,

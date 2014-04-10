@@ -32,10 +32,10 @@ class SalesOrder(SellingController):
 			msgprint("Expected Delivery Date cannot be before Purchase Order Date")
 			raise Exception
 
-		if self.po_no and self.customer:
+		if self.po_no and self.party:
 			so = frappe.db.sql("select name from `tabSales Order` \
 				where ifnull(po_no, '') = %s and name != %s and docstatus < 2\
-				and customer = %s", (self.po_no, self.name, self.customer))
+				and party = %s", (self.po_no, self.name, self.party))
 			if so and so[0][0]:
 				msgprint("""Another Sales Order (%s) exists against same PO No and Customer.
 					Please be sure, you are not making duplicate entry.""" % so[0][0])
@@ -88,13 +88,13 @@ class SalesOrder(SellingController):
 		self.validate_sales_mntc_quotation()
 
 	def validate_proj_cust(self):
-		if self.project_name and self.customer_name:
+		if self.project_name and self.party_name:
 			res = frappe.db.sql("""select name from `tabProject` where name = %s
-				and (customer = %s or ifnull(customer,'')='')""",
-					(self.project_name, self.customer))
+				and (party = %s or ifnull(party,'')='')""", (self.project_name, self.party))
 			if not res:
-				msgprint("Customer - %s does not belong to project - %s. \n\nIf you want to use project for multiple customers then please make customer details blank in project - %s."%(self.customer,self.project_name,self.project_name))
-				raise Exception
+				frappe.throw("""Customer - %s does not belong to project - %s. \n
+					If you want to use project for multiple customers then please make customer \
+					details blank in project - %s.""" % (self.party, self.project_name, self.project_name))
 
 	def validate(self):
 		super(SalesOrder, self).validate()
@@ -159,7 +159,7 @@ class SalesOrder(SellingController):
 	def on_submit(self):
 		self.update_stock_ledger(update_stock = 1)
 
-		self.check_credit(self.grand_total)
+		frappe.get_doc("Party", self.party).check_credit_limit(self.company, self.grand_total)
 
 		frappe.get_doc('Authorization Control').validate_approving_authority(self.doctype, self.grand_total, self)
 
@@ -286,12 +286,13 @@ def make_delivery_note(source_name, target_doc=None):
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.qty) - flt(source.delivered_qty)
 
+
 	doclist = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
 			"doctype": "Delivery Note",
 			"field_map": {
 				"shipping_address": "address_display",
-				"shipping_address_name": "customer_address",
+				"shipping_address_name": "party_address",
 			},
 			"validation": {
 				"docstatus": ["=", 1]

@@ -4,6 +4,8 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import scrub
+from frappe.model import rename_field, get_doctype_module
+
 
 def execute():
 	party_fields_map = {
@@ -119,6 +121,10 @@ def execute():
 			ELSE ''
 		END""")
 
+	frappe.delete_doc("Report", "Customer Account Head")
+	frappe.delete_doc("Report", "Supplier Account Head")
+
+	frappe.db.sql("""update tabAccount set warehouse = master_name where account_type = 'Warehouse'""")
 
 
 def create_party_group(args):
@@ -232,9 +238,17 @@ def migrate_all_party_link_fields():
 		},
 	}
 
+	for dt, field_map in fields_map.items():
+		for from_field, to_field in field_map.items():
+			rename_field(dt, from_field, to_field)
+
+		frappe.reload_doc(get_doctype_module(dt), "doctype", scrub(dt))
+
 
 # to do
 #------------------
 # party naming by
 # Contact Control
 # customer code in item master
+# receivable / payable account in company
+# new warehouse field in account, removed master_type, master_name, credit_days, credit_limit fields

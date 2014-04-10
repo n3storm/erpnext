@@ -87,7 +87,7 @@ class DeliveryNote(SellingController):
 				super(DeliveryNote, self).validate_with_previous_doc(self.tname, {
 					fn[0]: {
 						"ref_dn_field": fn[1],
-						"compare_fields": [["customer", "="], ["company", "="], ["project_name", "="],
+						"compare_fields": [["party", "="], ["company", "="], ["project_name", "="],
 							["currency", "="]],
 					},
 				})
@@ -103,12 +103,11 @@ class DeliveryNote(SellingController):
 
 	def validate_proj_cust(self):
 		"""check for does customer belong to same project as entered.."""
-		if self.project_name and self.customer:
+		if self.project_name and self.party:
 			res = frappe.db.sql("""select name from `tabProject`
-				where name = %s and (customer = %s or
-					ifnull(customer,'')='')""", (self.project_name, self.customer))
+				where name = %s and (party = %s or ifnull(party,'')='')""", (self.project_name, self.party))
 			if not res:
-				msgprint("Customer - %s does not belong to project - %s. \n\nIf you want to use project for multiple customers then please make customer details blank in project - %s."%(self.customer,self.project_name,self.project_name))
+				msgprint("Customer - %s does not belong to project - %s. \n\nIf you want to use project for multiple customers then please make customer details blank in project - %s."%(self.party,self.project_name,self.project_name))
 				raise Exception
 
 	def validate_for_items(self):
@@ -266,10 +265,10 @@ class DeliveryNote(SellingController):
 		amount, total = 0, 0
 		for d in self.get('delivery_note_details'):
 			if not (d.against_sales_order or d.against_sales_invoice):
-				amount += d.base_amount
-		if amount != 0:
+				amount += flt(d.base_amount)
+		if amount:
 			total = (amount/self.net_total)*self.grand_total
-			self.check_credit(total)
+			frappe.get_doc("Party", self.party).check_credit_limit(self.company, total)
 
 def get_invoiced_qty_map(delivery_note):
 	"""returns a map: {dn_detail: invoiced_qty}"""

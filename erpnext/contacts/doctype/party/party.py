@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.defaults import get_restrictions
-from frappe.utils import add_days
+from frappe.utils import add_days, flt, fmt_money
 from erpnext.utilities.doctype.address.address import get_address_display
 from erpnext.utilities.doctype.contact.contact import get_contact_details
 from frappe.model.naming import make_autoname
@@ -93,6 +93,36 @@ class Party(Document):
 	def after_rename(self, olddn, newdn, merge=False):
 		frappe.db.sql("""update `tabAddress` set address_title=%s where address_title=%s and party=%s""",
 			(newdn, olddn, newdn))
+
+	def check_credit_limit(self, company, current_voucher_amount=None):
+		credit_limit, credit_limit_from = self.get_credit_limit(company)
+		outstanding_amount = self.get_outstanding_amount(current_voucher_amount)
+		credit_controller = frappe.db.get_value('Accounts Settings', None, 'credit_controller')
+		# If outstanding greater than credit limit and not authorized person raise exception
+		if credit_limit > 0 and flt(outstanding_amount) > credit_limit \
+				and credit_controller not in frappe.user.get_roles():
+			frappe.throw("""Total Outstanding amount (%s) for <b>%s</b> can not be \
+				greater than credit limit (%s). To change your credit limit settings, \
+				please update in the <b>%s</b> master""" % (fmt_money(outstanding_amount),
+				self.name, fmt_money(credit_limit), credit_limit_from))
+
+	def get_credit_limit(self, company):
+		credit_limit_from = 'Party'
+		credit_limit = self.credit_limit
+
+		if not credit_limit:
+			credit_limit = frappe.db.get_value('Company', company, 'credit_limit')
+			credit_limit_from = 'Company'
+
+		return credit_limit, credit_limit_from
+
+	def get_outstanding_amount(self, current_voucher_amount):
+		outstanding_amount = flt(frappe.db.sql("""select sum(ifnull(debit, 0)) - sum(ifnull(credit, 0))
+			from `tabGL Entry` where party = %s""", self.name)[0][0])
+		if current_voucher_amount:
+			outstanding_amount += flt(current_voucher_amount)
+
+		return outstanding_amount
 
 @frappe.whitelist()
 def get_dashboard_info(party):
@@ -242,7 +272,7 @@ def set_account_and_due_date(party, account, party_type, company, posting_date):
 	out = {
 		party_type.lower(): party,
 		account_fieldname : account,
-		"due_date": get_due_date(posting_date, party, party_type, account, company)
+		"due_date": get_due_date(posting_date, party, company)
 	}
 	return out
 
@@ -259,15 +289,13 @@ def get_party_account(company, party, party_type):
 
 		return acc_head
 
-def get_due_date(posting_date, party, party_type, account, company):
+def get_due_date(posting_date, party, company):
 	"""Set Due Date = Posting Date + Credit Days"""
 	due_date = None
 	if posting_date:
 		credit_days = 0
-		if account:
-			credit_days = frappe.db.get_value("Account", account, "credit_days")
-		if party and not credit_days:
-			credit_days = frappe.db.get_value(party_type, party, "credit_days")
+		if party:
+			credit_days = frappe.db.get_value("Party", party, "credit_days")
 		if company and not credit_days:
 			credit_days = frappe.db.get_value("Company", company, "credit_days")
 
