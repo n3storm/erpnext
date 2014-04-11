@@ -58,7 +58,7 @@ erpnext.stock.DeliveryNoteController = erpnext.selling.SellingController.extend(
 							status: ["!=", "Stopped"],
 							per_delivered: ["<", 99.99],
 							project_name: cur_frm.doc.project_name || undefined,
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							company: cur_frm.doc.company
 						}
 					})
@@ -94,13 +94,6 @@ erpnext.stock.DeliveryNoteController = erpnext.selling.SellingController.extend(
 // for backward compatibility: combine new and previous states
 $.extend(cur_frm.cscript, new erpnext.stock.DeliveryNoteController({frm: cur_frm}));
 
-cur_frm.cscript.new_contact = function(){
-	tn = frappe.model.make_new_doc_and_get_name('Contact');
-	locals['Contact'][tn].is_customer = 1;
-	if(doc.customer) locals['Contact'][tn].customer = doc.customer;
-	loaddoc('Contact', tn);
-}
-
 
 // ***************** Get project name *****************
 cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
@@ -109,12 +102,6 @@ cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
 		filters: {
 			'party': doc.party
 		}
-	}
-}
-
-cur_frm.fields_dict['transporter_name'].get_query = function(doc) {
-	return{
-		filters: { 'supplier_type': "transporter" }
 	}
 }
 

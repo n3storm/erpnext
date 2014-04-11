@@ -290,7 +290,7 @@ def create_customers(args):
 				contact = args.get("customer_contact_" + str(i)).split(" ")
 				frappe.get_doc({
 					"doctype":"Contact",
-					"customer": customer,
+					"party": customer,
 					"first_name":contact[0],
 					"last_name": len(contact) > 1 and contact[1] or ""
 				}).insert()

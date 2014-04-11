@@ -6,4 +6,4 @@ import frappe
 from frappe.utils.nestedset import NestedSet
 
 class PartyGroup(NestedSet):
-	nsm_parent_field = 'parent_party_group';
+	nsm_parent_field = 'parent_party_group'

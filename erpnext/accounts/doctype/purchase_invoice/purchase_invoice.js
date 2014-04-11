@@ -16,7 +16,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 
 		if(!this.frm.doc.__islocal) {
 			// show credit_to in print format
-			if(!this.frm.doc.supplier && this.frm.doc.credit_to) {
+			if(!this.frm.doc.party && this.frm.doc.credit_to) {
 				this.frm.set_df_property("credit_to", "print_hide", 0);
 			}
 		}
@@ -49,7 +49,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 						method: "erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_invoice",
 						source_doctype: "Purchase Order",
 						get_query_filters: {
-							supplier: cur_frm.doc.supplier || undefined,
+							party: cur_frm.doc.party || undefined,
 							docstatus: 1,
 							status: ["!=", "Stopped"],
 							per_billed: ["<", 99.99],
@@ -64,7 +64,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 						method: "erpnext.stock.doctype.purchase_receipt.purchase_receipt.make_purchase_invoice",
 						source_doctype: "Purchase Receipt",
 						get_query_filters: {
-							supplier: cur_frm.doc.supplier || undefined,
+							party: cur_frm.doc.party || undefined,
 							docstatus: 1,
 							company: cur_frm.doc.company
 						}
@@ -76,13 +76,13 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 		this.is_opening(doc);
 	},
 
-	supplier: function() {
+	party: function() {
 		if(this.frm.updating_party_details)
 			return;
 		erpnext.utils.get_party_details(this.frm,
 			"erpnext.contacts.doctype.party.party.get_party_details", {
 				posting_date: this.frm.doc.posting_date,
-				party: this.frm.doc.supplier,
+				party: this.frm.doc.party,
 				party_type: "Supplier",
 				account: this.frm.doc.debit_to,
 				price_list: this.frm.doc.buying_price_list,
@@ -90,7 +90,7 @@ erpnext.accounts.PurchaseInvoice = erpnext.buying.BuyingController.extend({
 	},
 
 	credit_to: function() {
-		this.supplier();
+		this.party();
 	},
 
 	write_off_amount: function() {
@@ -134,15 +134,15 @@ cur_frm.cscript.make_bank_voucher = function() {
 }
 
 
-cur_frm.fields_dict['supplier_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return{
-		filters:{'supplier':  doc.supplier}
+		filters:{'party':  doc.party}
 	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return{
-		filters:{'supplier':  doc.supplier}
+		filters:{'party':  doc.party}
 	}
 }
 

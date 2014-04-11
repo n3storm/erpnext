@@ -47,11 +47,11 @@ cur_frm.fields_dict['pp_details'].grid.get_field('bom_no').get_query = function(
 	} else msgprint(frappe._("Please enter Item first"));
 }
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return{
 		query: "erpnext.controllers.queries.customer_query"
 	}
 }
 
-cur_frm.fields_dict.pp_so_details.grid.get_field("customer").get_query =
-	cur_frm.fields_dict.customer.get_query;
+cur_frm.fields_dict.pp_so_details.grid.get_field("party").get_query =
+	cur_frm.fields_dict.party.get_query;

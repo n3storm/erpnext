@@ -36,27 +36,27 @@ $.extend(erpnext.queries, {
 		return { query: "erpnext.projects.utils.query_task" };
 	},
 
-	customer_filter: function(doc) {
-		if(!doc.customer) {
-			frappe.throw(frappe._("Please specify a") + " " + 
-				frappe._(frappe.meta.get_label(doc.doctype, "customer", doc.name)));
+	party_filter: function(doc) {
+		if(!doc.party) {
+			frappe.throw(frappe._("Please specify a") + " " +
+				frappe._(frappe.meta.get_label(doc.doctype, "party", doc.name)));
 		}
-		
-		return { filters: { customer: doc.customer } };
+
+		return { filters: { party: doc.party } };
 	},
 
-	supplier_filter: function(doc) {
-		if(!doc.supplier) {
-			frappe.throw(frappe._("Please specify a") + " " + 
-				frappe._(frappe.meta.get_label(doc.doctype, "supplier", doc.name)));
+	party_filter: function(doc) {
+		if(!doc.party) {
+			frappe.throw(frappe._("Please specify a") + " " +
+				frappe._(frappe.meta.get_label(doc.doctype, "party", doc.name)));
 		}
-		
-		return { filters: { supplier: doc.supplier } };
+
+		return { filters: { party: doc.party } };
 	},
 
 	lead_filter: function(doc) {
 		if(!doc.lead) {
-			frappe.throw(frappe._("Please specify a") + " " + 
+			frappe.throw(frappe._("Please specify a") + " " +
 				frappe._(frappe.meta.get_label(doc.doctype, "lead", doc.name)));
 		}
 

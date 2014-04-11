@@ -13,14 +13,13 @@ def get_item_details(args):
 		args = {
 			"item_code": "",
 			"warehouse": None,
-			"customer": "",
+			"party": "",
 			"conversion_rate": 1.0,
 			"selling_price_list": None,
 			"price_list_currency": None,
 			"plc_conversion_rate": 1.0,
 			"doctype": "",
 			"docname": "",
-			"supplier": None,
 			"transaction_date": None,
 			"conversion_rate": 1.0,
 			"buying_price_list": None,
@@ -209,10 +208,10 @@ def validate_conversion_rate(args, meta):
 
 def get_party_item_code(args, item_doc, out):
 	if args.transaction_type == "selling":
-		customer_item_code = item_doc.get("item_customer_details", {"customer_name": args.customer})
+		customer_item_code = item_doc.get("item_customer_details", {"customer_name": args.party})
 		out.customer_item_code = customer_item_code[0].ref_code if customer_item_code else None
 	else:
-		item_supplier = item_doc.get("item_supplier_details", {"supplier": args.supplier})
+		item_supplier = item_doc.get("item_supplier_details", {"supplier": args.party})
 		out.supplier_part_no = item_supplier[0].supplier_part_no if item_supplier else None
 
 

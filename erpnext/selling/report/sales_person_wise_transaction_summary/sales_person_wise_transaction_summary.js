@@ -48,10 +48,10 @@ frappe.query_reports["Sales Person-wise Transaction Summary"] = {
 			options: "Brand",
 		},
 		{
-			fieldname:"customer",
-			label: frappe._("Customer"),
+			fieldname:"party",
+			label: frappe._("Customer (Party)"),
 			fieldtype: "Link",
-			options: "Customer",
+			options: "Party",
 		},
 		{
 			fieldname:"territory",

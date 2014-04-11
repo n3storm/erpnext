@@ -7,7 +7,7 @@ cur_frm.cscript.refresh = function(doc) {
 
 	cur_frm.cscript.make_dashboard()
 	erpnext.hide_naming_series();
-		
+
 	if(!doc.__islocal && doc.show_in_website) {
 		cur_frm.appframe.add_button("View In Website", function() {
 			window.open(doc.page_name);
@@ -129,7 +129,7 @@ cur_frm.cscript.add_image = function(doc, dt, dn) {
 	refresh_field('description_html');
 }
 
-// Quotation to validation - either customer or lead mandatory
+// Quotation to validation - either party or lead mandatory
 cur_frm.cscript.weight_to_validate = function(doc, cdt, cdn){
 	if((doc.nett_weight || doc.gross_weight) && !doc.weight_uom) {
 		msgprint(frappe._('Weight is mentioned,\nPlease mention "Weight UOM" too'));
@@ -152,7 +152,7 @@ cur_frm.fields_dict.item_supplier_details.grid.get_field("supplier").get_query =
 cur_frm.cscript.copy_from_item_group = function(doc) {
 	frappe.model.with_doc("Item Group", doc.item_group, function() {
 		$.each((doc.item_website_specifications || []), function(i, d) {
-				var n = frappe.model.add_child(doc, "Item Website Specification", 
+				var n = frappe.model.add_child(doc, "Item Website Specification",
 					"item_website_specifications");
 				n.label = d.label;
 				n.description = d.description;
@@ -164,11 +164,11 @@ cur_frm.cscript.copy_from_item_group = function(doc) {
 
 cur_frm.cscript.image = function() {
 	refresh_field("image_view");
-	
+
 	if(!cur_frm.doc.description_html)
 		cur_frm.cscript.add_image(cur_frm.doc);
 	else {
-		msgprint(frappe._("You may need to update: ") + 
+		msgprint(frappe._("You may need to update: ") +
 			frappe.meta.get_docfield(cur_frm.doc.doctype, "description_html").label);
 	}
 }

@@ -92,12 +92,12 @@ class PurchaseReceipt(BuyingController):
 
 
 	def validate_challan_no(self):
-		"Validate if same challan no exists for same supplier in a submitted purchase receipt"
+		"Validate if same challan no exists for same party in a submitted purchase receipt"
 		if self.challan_no:
 			exists = frappe.db.sql("""
 			SELECT name FROM `tabPurchase Receipt`
-			WHERE name!=%s AND supplier=%s AND challan_no=%s
-		AND docstatus=1""", (self.name, self.supplier, self.challan_no))
+			WHERE name!=%s AND party=%s AND challan_no=%s
+		AND docstatus=1""", (self.name, self.party, self.challan_no))
 			if exists:
 				frappe.msgprint("Another Purchase Receipt using the same Challan No. already exists.\
 			Please enter a valid Challan No.", raise_exception=1)
@@ -106,7 +106,7 @@ class PurchaseReceipt(BuyingController):
 		super(PurchaseReceipt, self).validate_with_previous_doc(self.tname, {
 			"Purchase Order": {
 				"ref_dn_field": "prevdoc_docname",
-				"compare_fields": [["supplier", "="], ["company", "="],	["currency", "="]],
+				"compare_fields": [["party", "="], ["company", "="],	["currency", "="]],
 			},
 			"Purchase Order Item": {
 				"ref_dn_field": "prevdoc_detail_docname",

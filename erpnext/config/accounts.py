@@ -22,13 +22,8 @@ data = [
 			},
 			{
 				"type": "doctype",
-				"name": "Customer",
-				"description": _("Customer database.")
-			},
-			{
-				"type": "doctype",
-				"name": "Supplier",
-				"description": _("Supplier database.")
+				"name": "Party",
+				"description": _("Party database.")
 			},
 		]
 	},
@@ -250,18 +245,6 @@ data = [
 				"name": "Sales Partners Commission",
 				"is_query_report": True,
 				"doctype": "Sales Invoice"
-			},
-			{
-				"type": "report",
-				"name": "Customer Account Head",
-				"is_query_report": True,
-				"doctype": "Account"
-			},
-			{
-				"type": "report",
-				"name": "Supplier Account Head",
-				"is_query_report": True,
-				"doctype": "Account"
 			},
 			{
 				"type": "report",

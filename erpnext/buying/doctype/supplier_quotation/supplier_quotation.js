@@ -17,9 +17,9 @@ erpnext.buying.SupplierQuotationController = erpnext.buying.BuyingController.ext
 
 		if (this.frm.doc.docstatus === 1) {
 			cur_frm.add_custom_button(frappe._("Make Purchase Order"), this.make_purchase_order);
-		} 
+		}
 		else if (this.frm.doc.docstatus===0) {
-			cur_frm.add_custom_button(frappe._('From Material Request'), 
+			cur_frm.add_custom_button(frappe._('From Material Request'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.stock.doctype.material_request.material_request.make_supplier_quotation",
@@ -34,8 +34,8 @@ erpnext.buying.SupplierQuotationController = erpnext.buying.BuyingController.ext
 					})
 				});
 		}
-	},	
-		
+	},
+
 	make_purchase_order: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order",
@@ -51,7 +51,7 @@ cur_frm.cscript.uom = function(doc, cdt, cdn) {
 	// no need to trigger updation of stock uom, as this field doesn't exist in supplier quotation
 }
 
-cur_frm.fields_dict['quotation_items'].grid.get_field('project_name').get_query = 
+cur_frm.fields_dict['quotation_items'].grid.get_field('project_name').get_query =
 	function(doc, cdt, cdn) {
 		return{
 			filters:[
@@ -60,14 +60,14 @@ cur_frm.fields_dict['quotation_items'].grid.get_field('project_name').get_query 
 		}
 	}
 
-cur_frm.fields_dict['supplier_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters:{'supplier': doc.supplier}
+		filters:{'party': doc.party}
 	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters:{'supplier': doc.supplier}
+		filters:{'party': doc.party}
 	}
 }

@@ -67,7 +67,7 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 							docstatus: 1,
 							status: ["!=", "Lost"],
 							order_type: cur_frm.doc.order_type,
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							company: cur_frm.doc.company
 						}
 					})
@@ -137,13 +137,6 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 
 // for backward compatibility: combine new and previous states
 $.extend(cur_frm.cscript, new erpnext.selling.SalesOrderController({frm: cur_frm}));
-
-cur_frm.cscript.new_contact = function(){
-	tn = frappe.model.make_new_doc_and_get_name('Contact');
-	locals['Contact'][tn].is_customer = 1;
-	if(doc.customer) locals['Contact'][tn].customer = doc.customer;
-	loaddoc('Contact', tn);
-}
 
 cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
 	return {

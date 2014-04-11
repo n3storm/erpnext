@@ -35,8 +35,7 @@ def execute():
 	for dt in ["party_group", "party"]:
 		frappe.reload_doc("contacts", "doctype", dt)
 
-	# update property setters
-	# How to update db schema based on ps?
+	# TODO update property setters
 
 	# update custom fields
 	for d in frappe.db.sql("""select name, dt from `tabCustom Field`
@@ -51,6 +50,11 @@ def execute():
 					cf.depends_on = party_fields_map[d[1]][cf.depends_on]
 
 			cf.save()
+
+	# update report dt
+	frappe.db.sql("""update tabReport set ref_doctype='Party'
+		where ref_doctype in ('Customer', 'Supplier', 'Sales Partner')
+		and report_type in ('Query Report', 'Script Report')""")
 
 	# Create party groups
 	# based on customer groups
@@ -114,17 +118,20 @@ def execute():
 	# update addresses and contacts
 	for dt in ["Address", "Contact"]:
 		frappe.reload_doc("utilities", "doctype", scrub(dt))
-		frappe.db.sql("""update `tab%s` set party = CASE
-			WHEN ifnull(customer, '')!='' THEN customer
-			WHEN ifnull(supplier, '')!='' THEN supplier
-			WHEN ifnull(sales_partner, '')!='' THEN sales_partner
-			ELSE ''
-		END""")
+		frappe.db.sql("""update `tab%s` set party =
+			CASE
+				WHEN ifnull(customer, '')!='' THEN customer
+				WHEN ifnull(supplier, '')!='' THEN supplier
+				WHEN ifnull(sales_partner, '')!='' THEN sales_partner
+				ELSE ''
+			END""")
 
 	frappe.delete_doc("Report", "Customer Account Head")
 	frappe.delete_doc("Report", "Supplier Account Head")
 
 	frappe.db.sql("""update tabAccount set warehouse = master_name where account_type = 'Warehouse'""")
+
+
 
 
 def create_party_group(args):
@@ -247,8 +254,39 @@ def migrate_all_party_link_fields():
 
 # to do
 #------------------
-# party naming by
+# set party naming by
 # Contact Control
-# customer code in item master
-# receivable / payable account in company
-# new warehouse field in account, removed master_type, master_name, credit_days, credit_limit fields
+# default receivable / payable account in company for exising and countrywise coa
+ - delete all party accounts and convert receibale/payable group to ledger
+# NOTE : All reports and print formats has been reloaded in "fields to be renamed" patch, hence not needed
+# set party in gl entry and replace existing account with receivable/payable account
+# Replace all existing customer/supplier account with receivable/payable account in all forms
+# dealing with price list -  separate default price list ????
+# Property setters
+# reports made using Report builder based on customer, supplier and sales partner
+# fix test record
+
+
+
+# code replacement pending
+#------------------
+# party.js & party.py ---- get_party_details
+# purchase analytics & sales analytics & report data map
+# pos.js
+# accounts receivable/payable report py
+# shopping cart
+# trends.py report
+# customer acquisition and loyalty report
+# print formats json
+
+
+# country-wise coa
+# --------------------
+# make country-wise file for maintaining account properties
+#	- Balance Sheet roots
+#	- Profit and Loss roots
+#	- default receivable account
+#	- default payable account
+#	- Stock asset group (create default warehouse account under this group)
+# Enable/disable options in "Chart of Accounts"
+# Make standard coa as per existing coa and always show in setup wizard

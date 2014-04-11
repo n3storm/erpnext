@@ -11,11 +11,7 @@ class Account(Document):
 	nsm_parent_field = 'parent_account'
 
 	def autoname(self):
-		self.name = self.account_name.strip() + ' - ' + \
-			frappe.db.get_value("Company", self.company, "abbr")
-
-	def get_address(self):
-		return {'address': frappe.db.get_value(self.master_type, self.master_name, "address")}
+		self.name = self.account_name.strip() + ' - ' + frappe.db.get_value("Company", self.company, "abbr")
 
 	def validate(self):
 		self.validate_warehouse()
@@ -117,10 +113,10 @@ class Account(Document):
 
 		if self.account_type == "Warehouse":
 			old_warehouse = cstr(frappe.db.get_value("Account", self.name, "warehouse"))
-			if old_warehouse != cstr(self.master_name):
+			if old_warehouse != cstr(self.warehouse):
 				if old_warehouse:
 					self.check_if_sle_exists(old_warehouse)
-				if self.master_name:
+				if self.warehouse:
 					self.check_if_sle_exists(self.warehouse)
 				else:
 					throw(_("Master Name is mandatory if account type is Warehouse"))

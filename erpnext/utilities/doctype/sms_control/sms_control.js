@@ -5,7 +5,7 @@ function SMSManager() {
 	var me = this;
 	this.get_contact_number = function(contact, key, value) {
 		return $c_obj('SMS Control', 'get_contact_number', {
-				contact_name:contact, 
+				contact_name:contact,
 				value:value,
 				key:key
 			}, function(r,rt) {
@@ -27,7 +27,7 @@ function SMSManager() {
 		}
 	}
 	this.show_dialog = function() {
-		if(!me.dialog) 
+		if(!me.dialog)
 			me.make_dialog();
 		me.dialog.set_values({
 			'message': me.message,
@@ -69,11 +69,11 @@ cur_frm.cscript.send_sms = function(doc,dt,dn) {
 		'Lead'				: '',
 		'Opportunity'			: 'Your enquiry has been logged into the system. Ref No: ' + doc.name,
 		'Quotation'			: 'Quotation ' + doc.name + ' has been sent via email. Thanks!',
-		'Sales Order'		: 'Sales Order ' + doc.name + ' has been created against ' 
+		'Sales Order'		: 'Sales Order ' + doc.name + ' has been created against '
 					+ (doc.quotation_no ? ('Quote No:' + doc.quotation_no) : '')
 					+ (doc.po_no ? (' for your PO: ' + doc.po_no) : ''),
 		'Delivery Note'		: 'Items has been delivered against delivery note: ' + doc.name
-					+ (doc.po_no ? (' for your PO: ' + doc.po_no) : ''),		
+					+ (doc.po_no ? (' for your PO: ' + doc.po_no) : ''),
 		'Sales Invoice': 'Invoice ' + doc.name + ' has been sent via email '
 					+ (doc.po_no ? (' for your PO: ' + doc.po_no) : ''),
 		'Material Request'			: 'Material Request ' + doc.name + ' has been raised in the system',
@@ -82,9 +82,9 @@ cur_frm.cscript.send_sms = function(doc,dt,dn) {
 	}
 
 	if (in_list(['Quotation', 'Sales Order', 'Delivery Note', 'Sales Invoice'], doc.doctype))
-		sms_man.show(doc.contact_person, 'customer', doc.customer, '', default_msg[doc.doctype]);
+		sms_man.show(doc.contact_person, 'party', doc.party, '', default_msg[doc.doctype]);
 	else if (in_list(['Purchase Order', 'Purchase Receipt'], doc.doctype))
-		sms_man.show(doc.contact_person, 'supplier', doc.supplier, '', default_msg[doc.doctype]);
+		sms_man.show(doc.contact_person, 'party', doc.party, '', default_msg[doc.doctype]);
 	else if (doc.doctype == 'Lead')
 		sms_man.show('', '', '', doc.mobile_no, default_msg[doc.doctype]);
 	else if (doc.doctype == 'Opportunity')

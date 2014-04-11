@@ -48,8 +48,8 @@ class Party(Document):
 
 	def create_address_contact_from_lead(self):
 		if self.lead:
-			if not frappe.db.get_value("Address", {"lead": self.lead, "customer": self.customer}):
-				frappe.db.sql("""update tabAddress set customer=%s where lead=%s""",
+			if not frappe.db.get_value("Address", {"lead": self.lead, "party": self.party}):
+				frappe.db.sql("""update tabAddress set party=%s where lead=%s""",
 					(self.name, self.lead))
 
 			lead = frappe.db.get_value("Lead", self.lead,
@@ -86,7 +86,7 @@ class Party(Document):
 			else:
 				frappe.db.sql("""delete from `tabAddress` where name=%s""", name)
 
-	def delete_customer_contact(self):
+	def delete_party_contact(self):
 		for contact in frappe.db.sql_list("""select name from `tabContact` where party=%s""", self.name):
 				frappe.delete_doc("Contact", contact)
 
@@ -198,7 +198,7 @@ def _get_party_details(party=None, account=None, party_type="Customer", company=
 	return out
 
 def set_address_details(out, party, party_type):
-	billing_address_field = "customer_address" if party_type == "Lead" \
+	billing_address_field = "party_address" if party_type == "Lead" \
 		else party_type.lower() + "_address"
 	out[billing_address_field] = frappe.db.get_value("Address",
 		{party_type.lower(): party.name, "is_primary_address":1}, "name")
@@ -219,12 +219,7 @@ def set_contact_details(out, party, party_type):
 	out.update(get_contact_details(out.contact_person))
 
 def set_other_values(out, party, party_type):
-	# copy
-	if party_type=="Customer":
-		to_copy = ["customer_name", "customer_group", "territory"]
-	else:
-		to_copy = ["supplier_name", "supplier_type"]
-	for f in to_copy:
+	for f in ["party_name", "party_group", "territory"]:
 		out[f] = party.get(f)
 
 	# fields prepended with default in Customer doctype
@@ -244,7 +239,7 @@ def set_price_list(out, party, party_type, given_price_list):
 
 	if not price_list and party_type=="Customer":
 		price_list =  frappe.db.get_value("Customer Group",
-			party.customer_group, "default_price_list")
+			party.party_group, "default_price_list")
 
 	if not price_list:
 		price_list = given_price_list
@@ -264,8 +259,6 @@ def set_account_and_due_date(party, account, party_type, company, posting_date):
 
 	if party:
 		account = get_party_account(company, party, party_type)
-	elif account:
-		party = frappe.db.get_value('Account', account, 'master_name')
 
 	account_fieldname = "debit_to" if party_type=="Customer" else "credit_to"
 
@@ -279,15 +272,9 @@ def set_account_and_due_date(party, account, party_type, company, posting_date):
 def get_party_account(company, party, party_type):
 	if not company:
 		frappe.throw(_("Please select company first."))
-
-	if party:
-		acc_head = frappe.db.get_value("Account", {"master_name":party,
-			"master_type": party_type, "company": company})
-
-		if not acc_head:
-			create_party_account(party, party_type, company)
-
-		return acc_head
+	else:
+		field = "default_receivable_account" if party_type=="Customer" else "default_payable_account"
+		return frappe.db.get_value("Company", company, field)
 
 def get_due_date(posting_date, party, company):
 	"""Set Due Date = Posting Date + Credit Days"""

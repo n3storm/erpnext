@@ -19,14 +19,14 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 	onload: function() {
 		this._super();
 
-		if(!this.frm.doc.__islocal && !this.frm.doc.customer && this.frm.doc.debit_to) {
+		if(!this.frm.doc.__islocal && !this.frm.doc.party && this.frm.doc.debit_to) {
 			// show debit_to in print format
 			this.frm.set_df_property("debit_to", "print_hide", 0);
 		}
 
 		// toggle to pos view if is_pos is 1 in user_defaults
 		if ((cint(frappe.defaults.get_user_defaults("is_pos"))===1 || this.frm.doc.is_pos)) {
-			if(this.frm.doc.__islocal && !this.frm.doc.amended_from && !this.frm.doc.customer) {
+			if(this.frm.doc.__islocal && !this.frm.doc.amended_from && !this.frm.doc.party) {
 				this.frm.set_value("is_pos", 1);
 				this.is_pos(function() {
 					if (cint(frappe.defaults.get_user_defaults("fs_pos_view"))===1)
@@ -98,7 +98,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 						docstatus: 1,
 						status: ["!=", "Stopped"],
 						per_billed: ["<", 99.99],
-						customer: cur_frm.doc.customer || undefined,
+						party: cur_frm.doc.party || undefined,
 						company: cur_frm.doc.company
 					}
 				})
@@ -115,7 +115,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 						var filters = {
 							company: cur_frm.doc.company
 						};
-						if(cur_frm.doc.customer) filters["customer"] = cur_frm.doc.customer;
+						if(cur_frm.doc.party) filters["party"] = cur_frm.doc.party;
 						return {
 							query: "erpnext.controllers.queries.get_delivery_notes_to_be_billed",
 							filters: filters
@@ -155,13 +155,13 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 		}
 	},
 
-	customer: function() {
+	party: function() {
 		if(this.frm.updating_party_details)
 			return;
 		erpnext.utils.get_party_details(this.frm,
 			"erpnext.contacts.doctype.party.party.get_party_details", {
 				posting_date: this.frm.doc.posting_date,
-				party: this.frm.doc.customer,
+				party: this.frm.doc.party,
 				party_type: "Customer",
 				account: this.frm.doc.debit_to,
 				price_list: this.frm.doc.selling_price_list,
@@ -169,7 +169,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 	},
 
 	debit_to: function() {
-		this.customer();
+		this.party();
 	},
 
 	allocated_amount: function() {

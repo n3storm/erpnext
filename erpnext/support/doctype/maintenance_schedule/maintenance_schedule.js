@@ -3,12 +3,12 @@
 
 frappe.provide("erpnext.support");
 
-frappe.ui.form.on_change("Maintenance Schedule", "customer", function(frm) { 
+frappe.ui.form.on_change("Maintenance Schedule", "party", function(frm) {
 	erpnext.utils.get_party_details(frm) });
-frappe.ui.form.on_change("Maintenance Schedule", "customer_address", 
+frappe.ui.form.on_change("Maintenance Schedule", "party_address",
 	erpnext.utils.get_address_display);
-frappe.ui.form.on_change("Maintenance Schedule", "contact_person", 
-	erpnext.utils.get_contact_details);	
+frappe.ui.form.on_change("Maintenance Schedule", "contact_person",
+	erpnext.utils.get_contact_details);
 
 // TODO commonify this code
 erpnext.support.MaintenanceSchedule = frappe.ui.form.Controller.extend({
@@ -16,7 +16,7 @@ erpnext.support.MaintenanceSchedule = frappe.ui.form.Controller.extend({
 		var me = this;
 
 		if (this.frm.doc.docstatus === 0) {
-			this.frm.add_custom_button(frappe._('From Sales Order'), 
+			this.frm.add_custom_button(frappe._('From Sales Order'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.selling.doctype.sales_order.sales_order.make_maintenance_schedule",
@@ -24,7 +24,7 @@ erpnext.support.MaintenanceSchedule = frappe.ui.form.Controller.extend({
 						get_query_filters: {
 							docstatus: 1,
 							order_type: me.frm.doc.order_type,
-							customer: me.frm.doc.customer || undefined,
+							party: me.frm.doc.party || undefined,
 							company: me.frm.doc.company
 						}
 					});
@@ -44,21 +44,21 @@ $.extend(cur_frm.cscript, new erpnext.support.MaintenanceSchedule({frm: cur_frm}
 
 cur_frm.cscript.onload = function(doc, dt, dn) {
   if(!doc.status) set_multiple(dt,dn,{status:'Draft'});
-  
+
   if(doc.__islocal){
     set_multiple(dt,dn,{transaction_date:get_today()});
-  }   
+  }
 }
 
-cur_frm.fields_dict['customer_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters:{ 'customer': doc.customer }
+		filters:{ 'party': doc.party }
 	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters:{ 'customer': doc.customer }
+		filters:{ 'party': doc.party }
 	}
 }
 
@@ -73,7 +73,7 @@ cur_frm.cscript.item_code = function(doc, cdt, cdn) {
 	var fname = cur_frm.cscript.fname;
 	var d = locals[cdt][cdn];
 	if (d.item_code) {
-		return get_server_fields('get_item_details', d.item_code, 'item_maintenance_detail', 
+		return get_server_fields('get_item_details', d.item_code, 'item_maintenance_detail',
 			doc, cdt, cdn, 1);
 	}
 }
@@ -85,7 +85,7 @@ cur_frm.cscript.periodicity = function(doc, cdt, cdn){
 		arg.start_date = d.start_date;
 		arg.end_date = d.end_date;
 		arg.periodicity = d.periodicity;
-		return get_server_fields('get_no_of_visits', docstring(arg), 
+		return get_server_fields('get_no_of_visits', docstring(arg),
 			'item_maintenance_detail', doc, cdt, cdn, 1);
 	} else {
 		msgprint(frappe._("Please enter Start Date and End Date"));
@@ -103,6 +103,6 @@ cur_frm.cscript.generate_schedule = function(doc, cdt, cdn) {
 	}
 }
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return { query: "erpnext.controllers.queries.customer_query" }
 }

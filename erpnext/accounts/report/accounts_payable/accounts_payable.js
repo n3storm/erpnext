@@ -11,20 +11,12 @@ frappe.query_reports["Accounts Payable"] = {
 			"default": frappe.defaults.get_user_default("company")
 		},
 		{
-			"fieldname":"account",
-			"label": frappe._("Account"),
+			"fieldname":"party",
+			"label": frappe._("Party"),
 			"fieldtype": "Link",
-			"options": "Account",
+			"options": "Party",
 			"get_query": function() {
-				var company = frappe.query_report.filters_by_name.company.get_value();
-				return {
-					"query": "accounts.utils.get_account_list", 
-					"filters": {
-						"report_type": "Balance Sheet",
-						"company": company,
-						"master_type": "Supplier"
-					}
-				}
+				return { "filters": {"supplier": 1}}
 			}
 		},
 		{

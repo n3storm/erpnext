@@ -5,4 +5,4 @@
 import frappe
 test_records = frappe.get_test_records('Task')
 
-test_ignore = ["Customer"]
+test_ignore = ["Party"]

@@ -12,7 +12,7 @@ pscript['onload_Accounts Browser'] = function(wrapper){
 		parent: wrapper,
 		single_column: true
 	})
-	
+
 	wrapper.appframe.add_module_icon("Accounts");
 
 	var main = $(wrapper).find(".layout-main"),
@@ -28,9 +28,8 @@ pscript['onload_Accounts Browser'] = function(wrapper){
 				 '<b>' +frappe._('Ledgers')+'</b>.'+ frappe._('Entries against') +
 				 '<b>' +frappe._('Groups') + '</b>'+ frappe._('are not allowed.')+
 		    '</li>'+
-			'<li>'+frappe._('Please do NOT create Account (Ledgers) for Customers and Suppliers. They are created directly from the Customer / Supplier masters.')+'</li>'+
 			'<li>'+
-			     '<b>'+frappe._('To create a Bank Account:')+'</b>'+ 
+			     '<b>'+frappe._('To create a Bank Account:')+'</b>'+
 			      frappe._('Go to the appropriate group (usually Application of Funds > Current Assets > Bank Accounts)')+
 			      frappe._('and create a new Account Ledger (by clicking on Add Child) of type "Bank"')+
 			'</li>'+
@@ -41,13 +40,13 @@ pscript['onload_Accounts Browser'] = function(wrapper){
 			'</li>'+
 		'</ol>'+
 		'<p>'+frappe._('Please setup your chart of accounts before you start Accounting Entries')+'</p></div>').appendTo(main);
-	
+
 	if (frappe.boot.user.can_create.indexOf("Company") !== -1) {
 		wrapper.appframe.add_button(frappe._('New Company'), function() { newdoc('Company'); },
 			'icon-plus');
 	}
-	
-	wrapper.appframe.set_title_right('Refresh', function() {  	
+
+	wrapper.appframe.set_title_right('Refresh', function() {
 			wrapper.$company_select.change();
 		});
 
@@ -55,11 +54,11 @@ pscript['onload_Accounts Browser'] = function(wrapper){
 	wrapper.$company_select = wrapper.appframe.add_select("Company", [])
 		.change(function() {
 			var ctype = frappe.get_route()[1] || 'Account';
-			erpnext.account_chart = new erpnext.AccountsChart(ctype, $(this).val(), 
+			erpnext.account_chart = new erpnext.AccountsChart(ctype, $(this).val(),
 				chart_area.get(0));
 			pscript.set_title(wrapper, ctype, $(this).val());
 		})
-		
+
 	// load up companies
 	return frappe.call({
 		method: 'erpnext.accounts.page.accounts_browser.accounts_browser.get_companies',
@@ -88,7 +87,7 @@ pscript['onshow_Accounts Browser'] = function(wrapper){
 	if(erpnext.account_chart && erpnext.account_chart.ctype != ctype) {
 		wrapper.$company_select.change();
 	}
-	
+
 	pscript.set_title(wrapper, ctype);
 }
 
@@ -100,11 +99,11 @@ erpnext.AccountsChart = Class.extend({
 		me.can_create = frappe.model.can_create(this.ctype);
 		me.can_delete = frappe.model.can_delete(this.ctype);
 		me.can_write = frappe.model.can_write(this.ctype);
-		
-		
+
+
 		me.company = company;
 		this.tree = new frappe.ui.Tree({
-			parent: $(wrapper), 
+			parent: $(wrapper),
 			label: ctype==="Account" ? "Accounts" : "Cost Centers",
 			args: {ctype: ctype, comp: company},
 			method: 'erpnext.accounts.page.accounts_browser.accounts_browser.get_children',
@@ -116,7 +115,7 @@ erpnext.AccountsChart = Class.extend({
 			},
 			toolbar: [
 				{ toggle_btn: true },
-				{ 
+				{
 					label: __("Open"),
 					condition: function(node) { return !node.root },
 					click: function(node, btn) {
@@ -136,7 +135,7 @@ erpnext.AccountsChart = Class.extend({
 				},
 				{
 					condition: function(node) {
-						return !node.root && me.ctype === 'Account' 
+						return !node.root && me.ctype === 'Account'
 							&& frappe.boot.user.can_read.indexOf("GL Entry") !== -1
 					},
 					label: __("View Ledger"),
@@ -149,7 +148,7 @@ erpnext.AccountsChart = Class.extend({
 						};
 						frappe.set_route("query-report", "General Ledger");
 					}
-					
+
 				},
 				{
 					condition: function(node) { return !node.root && me.can_write },
@@ -172,8 +171,8 @@ erpnext.AccountsChart = Class.extend({
 			],
 			onrender: function(node) {
 				if (me.ctype == 'Account' && node.data && node.data.balance!==undefined) {
-					$('<span class="balance-area pull-right text-muted">' 
-						+ format_currency(node.data.balance, node.data.currency) 
+					$('<span class="balance-area pull-right text-muted">'
+						+ format_currency(node.data.balance, node.data.currency)
 						+ '</span>').insertBefore(node.$ul);
 				}
 			}
@@ -181,20 +180,18 @@ erpnext.AccountsChart = Class.extend({
 	},
 	new_account: function() {
 		var me = this;
-		
+
 		// the dialog
 		var d = new frappe.ui.Dialog({
 			title:frappe._('New Account'),
 			fields: [
-				{fieldtype:'Data', fieldname:'account_name', label:frappe._('New Account Name'), reqd:true, 
-					description: frappe._("Name of new Account. Note: Please don't create accounts for Customers and Suppliers,")+
-					frappe._("they are created automatically from the Customer and Supplier master")},
+				{fieldtype:'Data', fieldname:'account_name', label:frappe._('New Account Name'), reqd:true},
 				{fieldtype:'Select', fieldname:'group_or_ledger', label:frappe._('Group or Ledger'),
 					options:'Group\nLedger', description: frappe._('Further accounts can be made under Groups,')+
 					 	frappe._('but entries can be made against Ledger')},
 				{fieldtype:'Select', fieldname:'account_type', label:frappe._('Account Type'),
-					options: ['', 'Bank', 'Cash', 'Warehouse', 'Receivable', 'Payable', 
-						'Equity', 'Cost of Goods Sold', 'Fixed Asset', 'Expense Account', 
+					options: ['', 'Bank', 'Cash', 'Warehouse', 'Receivable', 'Payable',
+						'Equity', 'Cost of Goods Sold', 'Fixed Asset', 'Expense Account',
 						'Income Account', 'Tax', 'Chargeable'].join('\n'),
 					description: frappe._("Optional. This setting will be used to filter in various transactions.") },
 				{fieldtype:'Float', fieldname:'tax_rate', label:frappe._('Tax Rate')},
@@ -203,7 +200,7 @@ erpnext.AccountsChart = Class.extend({
 		})
 
 		var fd = d.fields_dict;
-		
+
 		// account type if ledger
 		$(fd.group_or_ledger.input).change(function() {
 			if($(this).val()=='Group') {
@@ -216,7 +213,7 @@ erpnext.AccountsChart = Class.extend({
 				}
 			}
 		});
-		
+
 		// tax rate if tax
 		$(fd.account_type.input).change(function() {
 			if($(this).val()=='Tax') {
@@ -225,18 +222,17 @@ erpnext.AccountsChart = Class.extend({
 				$(fd.tax_rate.wrapper).toggle(false);
 			}
 		})
-		
+
 		// create
 		$(fd.create_new.input).click(function() {
 			var btn = this;
 			var v = d.get_values();
 			if(!v) return;
-					
+
 			var node = me.tree.get_selected_node();
 			v.parent_account = node.label;
-			v.master_type = '';
 			v.company = me.company;
-			
+
 			return frappe.call({
 				args: v,
 				method: 'erpnext.accounts.utils.add_ac',
@@ -246,17 +242,17 @@ erpnext.AccountsChart = Class.extend({
 				}
 			});
 		});
-		
+
 		// show
 		d.onshow = function() {
 			$(fd.group_or_ledger.input).change();
 			$(fd.account_type.input).change();
 		}
-		
+
 		$(fd.group_or_ledger.input).val("Ledger").change();
 		d.show();
 	},
-	
+
 	new_cost_center: function(){
 		var me = this;
 		// the dialog
@@ -270,17 +266,17 @@ erpnext.AccountsChart = Class.extend({
 				{fieldtype:'Button', fieldname:'create_new', label:frappe._('Create New') }
 			]
 		});
-	
+
 		// create
 		$(d.fields_dict.create_new.input).click(function() {
 			var v = d.get_values();
 			if(!v) return;
-			
+
 			var node = me.tree.get_selected_node();
-			
+
 			v.parent_cost_center = node.label;
 			v.company = me.company;
-			
+
 			return frappe.call({
 				args: v,
 				method: 'erpnext.accounts.utils.add_cc',

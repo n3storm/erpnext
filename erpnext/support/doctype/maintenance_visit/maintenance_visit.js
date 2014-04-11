@@ -3,42 +3,42 @@
 
 frappe.provide("erpnext.support");
 
-frappe.ui.form.on_change("Maintenance Visit", "customer", function(frm) { 
+frappe.ui.form.on_change("Maintenance Visit", "party", function(frm) {
 	erpnext.utils.get_party_details(frm) });
-frappe.ui.form.on_change("Maintenance Visit", "customer_address", 
+frappe.ui.form.on_change("Maintenance Visit", "party_address",
 	erpnext.utils.get_address_display);
-frappe.ui.form.on_change("Maintenance Visit", "contact_person", 
-	erpnext.utils.get_contact_details);	
+frappe.ui.form.on_change("Maintenance Visit", "contact_person",
+	erpnext.utils.get_contact_details);
 
 // TODO commonify this code
 erpnext.support.MaintenanceVisit = frappe.ui.form.Controller.extend({
 	refresh: function() {
 		if (this.frm.doc.docstatus===0) {
-			cur_frm.add_custom_button(frappe._('From Maintenance Schedule'), 
+			cur_frm.add_custom_button(frappe._('From Maintenance Schedule'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.support.doctype.maintenance_schedule.maintenance_schedule.make_maintenance_visit",
 						source_doctype: "Maintenance Schedule",
 						get_query_filters: {
 							docstatus: 1,
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							company: cur_frm.doc.company
 						}
 					})
 				});
-			cur_frm.add_custom_button(frappe._('From Customer Issue'), 
+			cur_frm.add_custom_button(frappe._('From Customer Issue'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.support.doctype.customer_issue.customer_issue.make_maintenance_visit",
 						source_doctype: "Customer Issue",
 						get_query_filters: {
 							status: ["in", "Open, Work in Progress"],
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							company: cur_frm.doc.company
 						}
 					})
 				});
-			cur_frm.add_custom_button(frappe._('From Sales Order'), 
+			cur_frm.add_custom_button(frappe._('From Sales Order'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.selling.doctype.sales_order.sales_order.make_maintenance_visit",
@@ -46,7 +46,7 @@ erpnext.support.MaintenanceVisit = frappe.ui.form.Controller.extend({
 						get_query_filters: {
 							docstatus: 1,
 							order_type: cur_frm.doc.order_type,
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							company: cur_frm.doc.company
 						}
 					})
@@ -62,15 +62,15 @@ cur_frm.cscript.onload = function(doc, dt, dn) {
 	if(doc.__islocal) set_multiple(dt,dn,{mntc_date:get_today()});
 }
 
-cur_frm.fields_dict['customer_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return{
-    	filters:{'customer': doc.customer}
+    	filters:{'party': doc.party}
   	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
   	return{
-    	filters:{'customer': doc.customer}
+    	filters:{'party': doc.party}
   	}
 }
 
@@ -89,6 +89,6 @@ cur_frm.cscript.item_code = function(doc, cdt, cdn) {
 }
 
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return {query: "erpnext.controllers.queries.customer_query" }
 }

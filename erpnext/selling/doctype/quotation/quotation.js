@@ -17,26 +17,26 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 	onload: function(doc, dt, dn) {
 		var me = this;
 		this._super(doc, dt, dn);
-		if(doc.customer && !doc.quotation_to)
+		if(doc.party && !doc.quotation_to)
 			doc.quotation_to = "Customer";
 		else if(doc.lead && !doc.quotation_to)
 			doc.quotation_to = "Lead";
 	},
 	refresh: function(doc, dt, dn) {
 		this._super(doc, dt, dn);
-		
+
 		if(doc.docstatus == 1 && doc.status!=='Lost') {
-			cur_frm.add_custom_button(frappe._('Make Sales Order'), 
+			cur_frm.add_custom_button(frappe._('Make Sales Order'),
 				cur_frm.cscript['Make Sales Order']);
 			if(doc.status!=="Ordered") {
-				cur_frm.add_custom_button(frappe._('Set as Lost'), 
+				cur_frm.add_custom_button(frappe._('Set as Lost'),
 					cur_frm.cscript['Declare Order Lost'], "icon-exclamation");
 			}
 			cur_frm.appframe.add_button(frappe._('Send SMS'), cur_frm.cscript.send_sms, "icon-mobile-phone");
 		}
-		
+
 		if (this.frm.doc.docstatus===0) {
-			cur_frm.add_custom_button(frappe._('From Opportunity'), 
+			cur_frm.add_custom_button(frappe._('From Opportunity'),
 				function() {
 					frappe.model.map_current_doc({
 						method: "erpnext.selling.doctype.opportunity.opportunity.make_quotation",
@@ -45,7 +45,7 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 							docstatus: 1,
 							status: "Submitted",
 							enquiry_type: cur_frm.doc.order_type,
-							customer: cur_frm.doc.customer || undefined,
+							party: cur_frm.doc.party || undefined,
 							lead: cur_frm.doc.lead || undefined,
 							company: cur_frm.doc.company
 						}
@@ -61,20 +61,20 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 				recipients: doc.contact_email
 			});
 		}
-		
+
 		this.quotation_to();
 	},
-	
+
 	quotation_to: function() {
 		var me = this;
 		this.frm.toggle_reqd("lead", this.frm.doc.quotation_to == "Lead");
-		this.frm.toggle_reqd("customer", this.frm.doc.quotation_to == "Customer");
+		this.frm.toggle_reqd("party", this.frm.doc.quotation_to == "Customer");
 		if (this.frm.doc.quotation_to == "Lead") {
-			this.frm.set_value("customer", null);
+			this.frm.set_value("party", null);
 			this.frm.set_value("contact_person", null);
-			
-			// to overwrite the customer_filter trigger from queries.js
-			$.each(["customer_address", "shipping_address_name"], 
+
+			// to overwrite the party_filter trigger from queries.js
+			$.each(["party_address", "shipping_address_name"],
 				function(i, opts) {
 					me.frm.set_query(opts, erpnext.queries["lead_filter"]);
 				}
@@ -87,10 +87,10 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 	tc_name: function() {
 		this.get_terms();
 	},
-	
+
 	validate_company_and_party: function(party_field) {
 		if(!this.frm.doc.quotation_to) {
-			msgprint(frappe._("Please select a value for" + " " + 
+			msgprint(frappe._("Please select a value for" + " " +
 				frappe.meta.get_label(this.frm.doc.doctype, "quotation_to", this.frm.doc.name)));
 			return false;
 		} else if (this.frm.doc.quotation_to == "Lead") {
@@ -99,7 +99,7 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 			return this._super(party_field);
 		}
 	},
-	
+
 	lead: function() {
 		var me = this;
 		frappe.call({
@@ -111,7 +111,7 @@ erpnext.selling.QuotationController = erpnext.selling.SellingController.extend({
 					me.frm.set_value(r.message);
 					me.frm.refresh();
 					me.frm.updating_party_details = false;
-					
+
 				}
 			}
 		})
@@ -160,7 +160,7 @@ cur_frm.cscript['Declare Order Lost'] = function(){
 		})
 	});
 	dialog.show();
-	
+
 }
 
 cur_frm.cscript.on_submit = function(doc, cdt, cdn) {

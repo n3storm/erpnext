@@ -50,11 +50,16 @@ cur_frm.cscript.setup_dashboard = function(doc) {
 	cur_frm.dashboard.add_doctype_badge("Delivery Note", "party");
 	cur_frm.dashboard.add_doctype_badge("Sales Invoice", "party");
 
+	cur_frm.dashboard.add_doctype_badge("Supplier Quotation", "party");
+	cur_frm.dashboard.add_doctype_badge("Purchase Order", "party");
+	cur_frm.dashboard.add_doctype_badge("Purchase Receipt", "party");
+	cur_frm.dashboard.add_doctype_badge("Purchase Invoice", "party");
+
 	return frappe.call({
 		type: "GET",
 		method: "erpnext.contacts.doctype.party.party.get_dashboard_info",
 		args: {
-			customer: cur_frm.doc.name
+			party: cur_frm.doc.name
 		},
 		callback: function(r) {
 			if (in_list(user_roles, "Accounts User") || in_list(user_roles, "Accounts Manager")) {
@@ -133,15 +138,15 @@ erpnext.utils.get_party_details = function(frm, method, args) {
 		method = "erpnext.contacts.doctype.party.party.get_party_details";
 	}
 	if(!args) {
-		if(frm.doc.customer) {
+		if(frm.doc.party) {
 			args = {
-				party: frm.doc.customer,
+				party: frm.doc.party,
 				party_type: "Customer",
 				price_list: frm.doc.selling_price_list
 			};
 		} else {
 			args = {
-				party: frm.doc.supplier,
+				party: frm.doc.party,
 				party_type: "Supplier",
 				price_list: frm.doc.buying_price_list
 			};
@@ -165,10 +170,10 @@ erpnext.utils.get_party_details = function(frm, method, args) {
 erpnext.utils.get_address_display = function(frm, address_field, display_field) {
 	if(frm.updating_party_details) return;
 	if(!address_field) {
-		if(frm.doc.customer) {
-			address_field = "customer_address";
-		} else if(frm.doc.supplier) {
-			address_field = "supplier_address";
+		if(frm.doc.party) {
+			address_field = "party_address";
+		} else if(frm.doc.party) {
+			address_field = "party_address";
 		} else return;
 	}
 	if(!display_field) display_field = "address_display";

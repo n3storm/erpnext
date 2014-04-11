@@ -90,9 +90,10 @@ cur_frm.fields_dict['system_role'].get_query = function(doc) {
 cur_frm.fields_dict['master_name'].get_query = function(doc) {
 	if (doc.based_on == 'Customerwise Discount')
 		return {
-			doctype: "Customer",
+			doctype: "Party",
 			filters:[
-				['Customer', 'docstatus', '!=', 2]
+				['Party', 'docstatus', '!=', 2],
+				['Party', 'customer', '=', 1]
 			]
 		}
 	else if (doc.based_on == 'Itemwise Discount')

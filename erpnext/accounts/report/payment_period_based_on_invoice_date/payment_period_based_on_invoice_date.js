@@ -23,19 +23,10 @@ frappe.query_reports["Payment Period Based On Invoice Date"] = {
 			default: "Incoming"
 		},
 		{
-			fieldname:"account",
-			label: frappe._("Account"),
+			fieldname:"party",
+			label: frappe._("Party"),
 			fieldtype: "Link",
-			options: "Account",
-			get_query: function() {
-				return {
-					query: "accounts.utils.get_account_list", 
-					filters: {
-						"report_type": "Balance Sheet",
-						company: frappe.query_report.filters_by_name.company.get_value()
-					}
-				}
-			}
+			options: "Party"
 		},
 		{
 			fieldname:"company",

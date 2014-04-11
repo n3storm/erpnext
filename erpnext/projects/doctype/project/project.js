@@ -15,7 +15,7 @@ cur_frm.cscript.refresh = function(doc) {
 	}
 }
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return{
 		query: "erpnext.controllers.queries.customer_query"
 	}

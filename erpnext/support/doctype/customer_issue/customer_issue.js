@@ -3,9 +3,9 @@
 
 frappe.provide("erpnext.support");
 
-frappe.ui.form.on_change("Customer Issue", "customer", function(frm) {
+frappe.ui.form.on_change("Customer Issue", "party", function(frm) {
 	erpnext.utils.get_party_details(frm) });
-frappe.ui.form.on_change("Customer Issue", "customer_address",
+frappe.ui.form.on_change("Customer Issue", "party_address",
 	erpnext.utils.get_address_display);
 frappe.ui.form.on_change("Customer Issue", "contact_person",
 	erpnext.utils.get_contact_details);
@@ -32,15 +32,15 @@ cur_frm.cscript.onload = function(doc,cdt,cdn){
 		set_multiple(dt,dn,{status:'Open'});
 }
 
-cur_frm.fields_dict['customer_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return{
-		filters:{ 'customer': doc.customer}
+		filters:{ 'party': doc.party}
 	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return{
-		filters:{ 'customer': doc.customer}
+		filters:{ 'party': doc.party}
 	}
 }
 
@@ -51,7 +51,7 @@ cur_frm.fields_dict['serial_no'].get_query = function(doc, cdt, cdn) {
 		['Serial No', 'status', '=', "Delivered"]
 	];
 	if(doc.item_code) cond = ['Serial No', 'item_code', '=', doc.item_code];
-	if(doc.customer) cond = ['Serial No', 'customer', '=', doc.customer];
+	if(doc.party) cond = ['Serial No', 'customer', '=', doc.party];
 	filter.push(cond);
 	return{
 		filters:filter
@@ -64,9 +64,9 @@ cur_frm.add_fetch('serial_no', 'description', 'description');
 cur_frm.add_fetch('serial_no', 'maintenance_status', 'warranty_amc_status');
 cur_frm.add_fetch('serial_no', 'warranty_expiry_date', 'warranty_expiry_date');
 cur_frm.add_fetch('serial_no', 'amc_expiry_date', 'amc_expiry_date');
-cur_frm.add_fetch('serial_no', 'customer', 'customer');
-cur_frm.add_fetch('serial_no', 'customer_name', 'customer_name');
-cur_frm.add_fetch('serial_no', 'delivery_address', 'customer_address');
+cur_frm.add_fetch('serial_no', 'customer', 'party');
+cur_frm.add_fetch('serial_no', 'customer_name', 'party_name');
+cur_frm.add_fetch('serial_no', 'delivery_address', 'party_address');
 cur_frm.add_fetch('item_code', 'item_name', 'item_name');
 cur_frm.add_fetch('item_code', 'description', 'description');
 
@@ -87,5 +87,5 @@ cur_frm.fields_dict['item_code'].get_query = function(doc, cdt, cdn) {
 
 
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return{	query: "erpnext.controllers.queries.customer_query" } }

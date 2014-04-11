@@ -1,12 +1,12 @@
 // Copyright (c) 2013, Web Notes Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-cur_frm.fields_dict.customer.get_query = function(doc,cdt,cdn) {
+cur_frm.fields_dict.party.get_query = function(doc,cdt,cdn) {
 	return{	query: "erpnext.controllers.queries.customer_query" } }
 
 frappe.provide("erpnext.support");
 
-cur_frm.add_fetch("customer", "customer_name", "customer_name")
+cur_frm.add_fetch("party", "party_name", "party_name")
 
 $.extend(cur_frm.cscript, {
 	onload: function(doc, dt, dn) {
@@ -15,7 +15,7 @@ $.extend(cur_frm.cscript, {
 				<span class="help">'+frappe._("Integrate incoming support emails to Support Ticket")+'</span></p>';
 		}
 	},
-	
+
 	refresh: function(doc) {
 		erpnext.hide_naming_series();
 		cur_frm.cscript.make_listing(doc);
@@ -24,18 +24,18 @@ $.extend(cur_frm.cscript, {
 				if(doc.status!='Closed') cur_frm.add_custom_button('Close Ticket', cur_frm.cscript['Close Ticket']);
 				if(doc.status=='Closed') cur_frm.add_custom_button('Re-Open Ticket', cur_frm.cscript['Re-Open Ticket']);
 			}
-			
+
 			cur_frm.toggle_enable(["subject", "raised_by"], false);
 			cur_frm.toggle_display("description", false);
 		}
 		refresh_field('status');
 	},
-	
+
 	make_listing: function(doc) {
 		var wrapper = cur_frm.fields_dict['thread_html'].wrapper;
-		
+
 		var comm_list = frappe.get_list("Communication", {"parent": doc.name, "parenttype":"Support Ticket"})
-		
+
 		if(!comm_list.length) {
 			comm_list.push({
 				"sender": doc.raised_by,
@@ -43,7 +43,7 @@ $.extend(cur_frm.cscript, {
 				"subject": doc.subject,
 				"content": doc.description});
 		}
-					
+
 		cur_frm.communication_view = new frappe.views.CommunicationList({
 			list: comm_list,
 			parent: wrapper,
@@ -52,11 +52,11 @@ $.extend(cur_frm.cscript, {
 		})
 
 	},
-		
+
 	'Close Ticket': function() {
 		cur_frm.cscript.set_status("Closed");
 	},
-	
+
 	'Re-Open Ticket': function() {
 		cur_frm.cscript.set_status("Open");
 	},
@@ -72,8 +72,8 @@ $.extend(cur_frm.cscript, {
 				if(!r.exc) cur_frm.reload_doc();
 			}
 		})
-		
+
 	}
-	
+
 })
 

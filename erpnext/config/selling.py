@@ -12,8 +12,8 @@ data = [
 			},
 			{
 				"type": "doctype",
-				"name": "Customer",
-				"description": _("Customer database."),
+				"name": "Party",
+				"description": _("Customer (Party) database."),
 			},
 			{
 				"type": "doctype",
@@ -71,15 +71,6 @@ data = [
 				"type": "doctype",
 				"name": "Campaign",
 				"description": _("Sales campaigns."),
-			},
-			{
-				"type": "page",
-				"label": _("Customer Group"),
-				"name": "Sales Browser",
-				"icon": "icon-sitemap",
-				"link": "Sales Browser/Customer Group",
-				"description": _("Manage Customer Group Tree."),
-				"doctype": "Customer Group",
 			},
 			{
 				"type": "page",
@@ -172,7 +163,7 @@ data = [
 				"type": "report",
 				"is_query_report": True,
 				"name": "Customer Acquisition and Loyalty",
-				"doctype": "Customer",
+				"doctype": "Party",
 				"icon": "icon-bar-chart",
 			},
 		]

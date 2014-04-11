@@ -100,13 +100,8 @@ data = [
 			},
 			{
 				"type": "doctype",
-				"name": "Customer",
-				"description": _("Customer master.")
-			},
-			{
-				"type": "doctype",
-				"name": "Supplier",
-				"description": _("Supplier master.")
+				"name": "Party",
+				"description": _("Party master.")
 			},
 			{
 				"type": "doctype",
@@ -124,7 +119,7 @@ data = [
 
 def get_data():
 	out = list(data)
-	
+
 	for module, label, icon in (
 		("accounts", _("Accounts"), "icon-money"),
 		("stock", _("Stock"), "icon-truck"),
@@ -132,7 +127,7 @@ def get_data():
 		("buying", _("Buying"), "icon-shopping-cart"),
 		("hr", _("Human Resources"), "icon-group"),
 		("support", _("Support"), "icon-phone")):
-		
+
 		add_setup_section(out, "erpnext", module, label, icon)
 
 	return out

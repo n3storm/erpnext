@@ -16,46 +16,46 @@ erpnext.buying.PurchaseOrderController = erpnext.buying.BuyingController.extend(
 	refresh: function(doc, cdt, cdn) {
 		this._super();
 		this.frm.dashboard.reset();
-		
+
 		if(doc.docstatus == 1 && doc.status != 'Stopped'){
-			cur_frm.dashboard.add_progress(cint(doc.per_received) + frappe._("% Received"), 
+			cur_frm.dashboard.add_progress(cint(doc.per_received) + frappe._("% Received"),
 				doc.per_received);
-			cur_frm.dashboard.add_progress(cint(doc.per_billed) + frappe._("% Billed"), 
+			cur_frm.dashboard.add_progress(cint(doc.per_billed) + frappe._("% Billed"),
 				doc.per_billed);
 
 			cur_frm.add_custom_button('Send SMS', cur_frm.cscript.send_sms);
 
-			if(flt(doc.per_received, 2) < 100) 
-				cur_frm.add_custom_button(frappe._('Make Purchase Receipt'), this.make_purchase_receipt);	
-			if(flt(doc.per_billed, 2) < 100) 
+			if(flt(doc.per_received, 2) < 100)
+				cur_frm.add_custom_button(frappe._('Make Purchase Receipt'), this.make_purchase_receipt);
+			if(flt(doc.per_billed, 2) < 100)
 				cur_frm.add_custom_button(frappe._('Make Invoice'), this.make_purchase_invoice);
-			if(flt(doc.per_billed, 2) < 100 || doc.per_received < 100) 
+			if(flt(doc.per_billed, 2) < 100 || doc.per_received < 100)
 				cur_frm.add_custom_button(frappe._('Stop'), cur_frm.cscript['Stop Purchase Order'], "icon-exclamation");
 		} else if(doc.docstatus===0) {
 			cur_frm.cscript.add_from_mappers();
 		}
 
 		if(doc.docstatus == 1 && doc.status == 'Stopped')
-			cur_frm.add_custom_button(frappe._('Unstop Purchase Order'), 
+			cur_frm.add_custom_button(frappe._('Unstop Purchase Order'),
 				cur_frm.cscript['Unstop Purchase Order'], "icon-check");
 	},
-		
+
 	make_purchase_receipt: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_receipt",
 			source_name: cur_frm.doc.name
 		})
 	},
-	
+
 	make_purchase_invoice: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.buying.doctype.purchase_order.purchase_order.make_purchase_invoice",
 			source_name: cur_frm.doc.name
 		})
 	},
-	
+
 	add_from_mappers: function() {
-		cur_frm.add_custom_button(frappe._('From Material Request'), 
+		cur_frm.add_custom_button(frappe._('From Material Request'),
 			function() {
 				frappe.model.map_current_doc({
 					method: "erpnext.stock.doctype.material_request.material_request.make_purchase_order",
@@ -71,7 +71,7 @@ erpnext.buying.PurchaseOrderController = erpnext.buying.BuyingController.extend(
 			}
 		);
 
-		cur_frm.add_custom_button(frappe._('From Supplier Quotation'), 
+		cur_frm.add_custom_button(frappe._('From Supplier Quotation'),
 			function() {
 				frappe.model.map_current_doc({
 					method: "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order",
@@ -83,9 +83,9 @@ erpnext.buying.PurchaseOrderController = erpnext.buying.BuyingController.extend(
 					}
 				})
 			}
-		);	
-			
-		cur_frm.add_custom_button(frappe._('For Supplier'), 
+		);
+
+		cur_frm.add_custom_button(frappe._('For Supplier'),
 			function() {
 				frappe.model.map_current_doc({
 					method: "erpnext.stock.doctype.material_request.material_request.make_purchase_order_based_on_supplier",
@@ -107,15 +107,15 @@ erpnext.buying.PurchaseOrderController = erpnext.buying.BuyingController.extend(
 // for backward compatibility: combine new and previous states
 $.extend(cur_frm.cscript, new erpnext.buying.PurchaseOrderController({frm: cur_frm}));
 
-cur_frm.fields_dict['supplier_address'].get_query = function(doc, cdt, cdn) {
+cur_frm.fields_dict['party_address'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters: {'supplier': doc.supplier}
+		filters: {'party': doc.party}
 	}
 }
 
 cur_frm.fields_dict['contact_person'].get_query = function(doc, cdt, cdn) {
 	return {
-		filters: {'supplier': doc.supplier}
+		filters: {'party': doc.party}
 	}
 }
 
@@ -128,7 +128,7 @@ cur_frm.fields_dict['po_details'].grid.get_field('project_name').get_query = fun
 }
 
 cur_frm.cscript.get_last_purchase_rate = function(doc, cdt, cdn){
-	return $c_obj(doc, 'get_last_purchase_rate', '', function(r, rt) { 
+	return $c_obj(doc, 'get_last_purchase_rate', '', function(r, rt) {
 		refresh_field(cur_frm.cscript.fname);
 		var doc = locals[cdt][cdn];
 		cur_frm.cscript.calc_amount( doc, 2);
@@ -142,7 +142,7 @@ cur_frm.cscript['Stop Purchase Order'] = function() {
 	if (check) {
 		return $c('runserverobj', args={'method':'update_status', 'arg': 'Stopped', 'docs':doc}, function(r,rt) {
 			cur_frm.refresh();
-		});	
+		});
 	}
 }
 
@@ -153,13 +153,13 @@ cur_frm.cscript['Unstop Purchase Order'] = function() {
 	if (check) {
 		return $c('runserverobj', args={'method':'update_status', 'arg': 'Submitted', 'docs':doc}, function(r,rt) {
 			cur_frm.refresh();
-		});	
+		});
 	}
 }
 
 cur_frm.pformat.indent_no = function(doc, cdt, cdn){
 	//function to make row of table
-	
+
 	var make_row = function(title,val1, val2, bold){
 		var bstart = '<b>'; var bend = '</b>';
 
@@ -169,12 +169,12 @@ cur_frm.pformat.indent_no = function(doc, cdt, cdn){
 	}
 
 	out ='';
-	
+
 	var cl = doc.po_details || [];
 
-	// outer table	
+	// outer table
 	var out='<div><table class="noborder" style="width:100%"><tr><td style="width: 50%"></td><td>';
-	
+
 	// main table
 	out +='<table class="noborder" style="width:100%">';
 
