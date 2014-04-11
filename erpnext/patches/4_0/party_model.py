@@ -254,17 +254,16 @@ def migrate_all_party_link_fields():
 
 # to do
 #------------------
-# set party naming by
-# Contact Control
+# set "contact settings" -> "party naming by" from "customer naming by" and "supplier naming by"
 # default receivable / payable account in company for exising and countrywise coa
- - delete all party accounts and convert receibale/payable group to ledger
+# - delete all party accounts and convert receibale/payable group to ledger
 # NOTE : All reports and print formats has been reloaded in "fields to be renamed" patch, hence not needed
 # set party in gl entry and replace existing account with receivable/payable account
 # Replace all existing customer/supplier account with receivable/payable account in all forms
 # dealing with price list -  separate default price list ????
 # Property setters
 # reports made using Report builder based on customer, supplier and sales partner
-# fix test record
+# fix test records
 
 
 
