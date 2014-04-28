@@ -1,28 +1,28 @@
  (Half Day),(Medio día)
- .You can not assign / modify / remove Master Name,
- Quantity should be greater than 0.,
- after this transaction.,
- against cost center ,
- against sales order,contra la orden de venta
+ .You can not assign / modify / remove Master Name,No se puede asignar / modificar / eliminar el nombre del Maestro
+ Quantity should be greater than 0.,La cantidad debe ser mayor que 0.
+ after this transaction.,después de esta transacción.
+ against cost center ,contra el centro de coste 
+ against sales order,contra el pedido de venta
  against same operation,contra la misma operación
  already marked,ya marcada
- and fiscal year : ,
+ and fiscal year : ,y el año fiscal : 
  and year: ,y el año:
- as it is stock Item or packing item,ya que es la acción del artículo o elemento de embalaje
+ as it is stock Item or packing item,ya que es Artículo de stock o Elemento de embalaje
  at warehouse: ,en el almacén:
- budget ,
+ budget ,presupuesto 
  can not be created/modified against stopped Sales Order ,
- can not be deleted,
- can not be made.,no puede ser hecho.
- can not be received twice,
+ can not be deleted,no puede borrarse
+ can not be made.,no puede hacerse.
+ can not be received twice, no se puede recibir dos veces
  can only be debited/credited through Stock transactions,
- created,
- does not belong to ,
- does not belong to Warehouse,
+ created,creado
+ does not belong to ,no pertenece a 
+ does not belong to Warehouse,no pertenece al Almacen
  does not belong to the company,no pertenece a la empresa
- does not exists,
- for account ,
- has been freezed. ,ha sido freezed.
+ does not exists,no existe
+ for account ,para la cuenta 
+ has been freezed. ,ha sido congelado.
  is a frozen account. Either make the account active or assign role in Accounts Settings who can create / modify entries against this account,
 " is a frozen account. To create / edit transactions against this account, you need role",
 " is less than equals to zero in the system, valuation rate is mandatory for this item",
@@ -38,10 +38,10 @@
  should be same as that in ,debe ser el mismo que el de
  was on leave on ,estaba en situación de excedencia
  will be ,será
- will be created,
+ will be created,será crado
  will be over-billed against mentioned ,sobre-será facturado contra la mencionada
- will become ,se convertirá
- will exceed by ,
+ will become ,se convertirá 
+ will exceed by , sobrepasará 
 """ does not exists","""No existe"
 # ###.##,
 "#,###",
@@ -51,10 +51,10 @@
 #.###,
 "#.###,##",
 %  Delivered,Entregado%
-% Amount Billed,Importe% Anunciada
-% Billed,Anunciado%
+% Amount Billed,Importe % cargado
+% Billed,Cargado %
 % Completed,% Completado
-% Delivered,Entregado %
+% Delivered,Envieado %
 % Installed,Instalado%
 % Received,Recibido%
 % of materials billed against this Purchase Order.,% De los materiales facturados en contra de esta Orden de Compra.
