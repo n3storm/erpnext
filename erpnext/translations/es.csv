@@ -54,9 +54,9 @@
 % Amount Billed,Importe % cargado
 % Billed,Cargado %
 % Completed,% Completado
-% Delivered,Envieado %
-% Installed,Instalado%
-% Received,Recibido%
+% Delivered,Enviado %
+% Installed,Instalado %
+% Received,Recibido %
 % of materials billed against this Purchase Order.,% De los materiales facturados en contra de esta Orden de Compra.
 % of materials billed against this Sales Order,% De los materiales facturados en contra de esta orden de venta
 % of materials delivered against this Delivery Note,% De los materiales entregados en contra de esta nota de entrega
@@ -114,31 +114,31 @@ A condition for a Shipping Rule,Una condición para una regla de envío
 A logical Warehouse against which stock entries are made.,Un almacen de depósito lógico en el que las entradas en existencias están hechos.
 A symbol for this currency. For e.g. $,"Un símbolo de esta moneda. Por ejemplo, $"
 A third party distributor / dealer / commission agent / affiliate / reseller who sells the companies products for a commission.,Un distribuidor tercero / dealer / comisionista / filial / distribuidor que vende los productos de las empresas de una comisión.
-A+,A +
+A+,A+
 A-,A-
-AB+,AB +
+AB+,AB+
 AB-,AB-
 AMC Expiry Date,AMC Fecha de Caducidad
 AMC expiry date and maintenance status mismatched,AMC fecha de caducidad y el estado de mantenimiento no coincidentes
 ATT,ATT
-Abbr,Abbr
-About ERPNext,Acerca ERPNext
+Abbr,Abr
+About ERPNext,Acerca de ERPNext
 Above Value,Por encima del valor
 Absent,Ausente
 Acceptance Criteria,Criterios de Aceptación
 Accepted,Aceptado
 Accepted Quantity,Cantidad aceptada
-Accepted Warehouse,Almacén Aceptado
-Account,cuenta
-Account ,
+Accepted Warehouse,Almacén aceptado
+Account,Cuenta
+Account ,Cuenta 
 Account Balance,Saldo de la cuenta
 Account Details,Detalles de la cuenta
-Account Head,Cuenta Head
+Account Head,Cuenta Cabecera
 Account Name,Nombre de la cuenta
 Account Type,Tipo de Cuenta
-Account expires on,Cuenta expira el
+Account expires on,La cuenta expira el
 Account for the warehouse (Perpetual Inventory) will be created under this Account.,Cuenta para el almacén ( inventario permanente ) se creará en esta Cuenta.
-Account for this ,Cuenta para este
+Account for this ,Cuenta para este 
 Accounting,Contabilidad
 Accounting Entries are not allowed against groups.,Asientos contables no se les permite a los grupos .
 "Accounting Entries can be made against leaf nodes, called","Los comentarios de Contabilidad se pueden hacer contra los nodos hoja , llamada"
@@ -162,55 +162,55 @@ Actual Budget,Presupuesto Real
 Actual Completion Date,Fecha de Terminación del Real
 Actual Date,Fecha Actual
 Actual End Date,Fecha de finalización real
-Actual Invoice Date,Actual Fecha de la factura
+Actual Invoice Date,Fecha real de Factura
 Actual Posting Date,Actual Fecha de Publicación
 Actual Qty,Cantidad real
 Actual Qty (at source/target),Cantidad real (en origen / destino)
 Actual Qty After Transaction,Cantidad real después de la transacción
-Actual Qty: Quantity available in the warehouse.,Actual Cantidad : Cantidad disponible en el almacén .
+Actual Qty: Quantity available in the warehouse.,Cantidad real: Cantidad disponible en el almacén.
 Actual Quantity,Cantidad real
 Actual Start Date,Fecha real de inicio
 Add,Añadir
 Add / Edit Taxes and Charges,Agregar / Editar Impuestos y Cargos
-Add Child,Añadir niño
-Add Serial No,Añadir Serial No
-Add Taxes,Añadir impuestos
-Add Taxes and Charges,Añadir las tasas y cargos
-Add or Deduct,Agregar o deducir
+Add Child,Añadir hijo
+Add Serial No,Añadir No. de serie
+Add Taxes,Añadir Impuestos
+Add Taxes and Charges,Añadir Impuestos y Cargos
+Add or Deduct,Agregar o Deducir
 Add rows to set annual budgets on Accounts.,Añada filas para fijar presupuestos anuales de Cuentas.
 Add to calendar on this date,Añadir al calendario en esta fecha
 Add/Remove Recipients,Agregar / Quitar destinatarios
 Additional Info,Información adicional
 Address,Dirección
-Address & Contact,Dirección y contacto
-Address & Contacts,Dirección y contactos
-Address Desc,Abordar la descripción
-Address Details,Detalles de las direcciones
-Address HTML,Dirección HTML
+Address & Contact,Dirección y Contacto
+Address & Contacts,Dirección y Contactos
+Address Desc,Descripción de la Dirección
+Address Details,Detalles de la Direcciones
+Address HTML,Dirección en HTML
 Address Line 1,Dirección Línea 1
 Address Line 2,Dirección Línea 2
-Address Title,Título Dirección
-Address Type,Tipo de dirección
-Advance Amount,Avance Importe
-Advance amount,Avance cantidad
-Advances,Insinuaciones
+Address Title,Título de la Dirección
+Address Type,Tipo de Dirección
+Advance Amount,Cantidad en Avance
+Advance amount,Cantidad en avance
+Advances,Avances
 Advertisement,Anuncio
-After Sale Installations,Después Instalaciones Venta
+After Sale Installations,Instalaciones tras la Venta
 Against,Contra
 Against Account,Contra Cuenta
 Against Docname,Contra DocNombre
 Against Doctype,Contra Doctype
-Against Document Detail No,Contra Detalle documento n
-Against Document No,Contra el documento n º
+Against Document Detail No,Contra el Detalle de Documento nº
+Against Document No,Contra el Documento nº
 Against Expense Account,Contra la Cuenta de Gastos
 Against Income Account,Contra la Cuenta de Ingresos
-Against Journal Voucher,Contra del diario de comprobantes
-Against Purchase Invoice,Contra la factura de compra
-Against Sales Invoice,Contra la factura de venta
-Against Sales Order,Contra la Orden de Venta
-Against Voucher,Contra Voucher
-Against Voucher Type,Contra el tipo de comprobante
-Ageing Based On,Envejecimiento Basado En
+Against Journal Voucher,Contra el Diario de recibos
+Against Purchase Invoice,Contra la Factura de Compra
+Against Sales Invoice,Contra la Factura de Venta
+Against Sales Order,Contra el Pedido de Venta
+Against Voucher,Contra el Recibo
+Against Voucher Type,Contra el tipo de Recibo
+Ageing Based On,Enve-jecimiento Basado En
 Agent,Agente
 "Aggregate group of **Items** into another **Item**. This is useful if you are bundling a certain **Items** into a package and you maintain stock of the packed **Items** and not the aggregate **Item**. 
 
@@ -221,11 +221,11 @@ For Example: If you are selling Laptops and Backpacks separately and have a spec
 Note: BOM = Bill of Materials",
 Aging Date,Fecha de antigüedad
 All Addresses.,Todas las direcciones.
-All Contact,Todo contacto
-All Contacts.,Todos los contactos.
-All Customer Contact,Todo servicio al cliente
+All Contact,Todo Contacto
+All Contacts.,Todos los Contactos.
+All Customer Contact,Todo Contactos Cliente
 All Day,Todo el día
-All Employee (Active),Todos los empleados (Activo)
+All Employee (Active),Todos los Empleados (Activo)
 All Lead (Open),Todos Plomo (Abierto)
 All Products or Services.,Todos los Productos o Servicios.
 All Sales Partner Contact,Todo contacto Sales Partner
