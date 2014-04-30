@@ -1668,35 +1668,35 @@ Opportunity Items,Artículos Oportunidad
 Opportunity Lost,Oportunidad Perdida
 Opportunity Type,Oportunidad Tipo
 Optional. This setting will be used to filter in various transactions.,Opcional . Este ajuste se utiliza para filtrar en varias transacciones.
-Order Type,Tipo de orden
-Ordered,ordenado
-Ordered Items To Be Billed,Los artículos pedidos a facturar
-Ordered Items To Be Delivered,Los artículos pedidos para ser entregados
-Ordered Qty,pedido Cantidad
+Order Type,Tipo de Pedido
+Ordered,Ordenado
+Ordered Items To Be Billed,Artículos pedidos a facturar
+Ordered Items To Be Delivered,Artículos pedidos para ser entregados
+Ordered Qty,Cant. Pedida
 "Ordered Qty: Quantity ordered for purchase, but not received.","Pedido Cantidad : Cantidad a pedir para la compra, pero no recibió ."
-Ordered Quantity,Cantidad ordenada
-Orders released for production.,Los pedidos a producción.
-Organization,organización
+Ordered Quantity,Cantidad pedida
+Orders released for production.,Pedidos a producción.
+Organization,Organización
 Organization Name,Nombre de la organización
-Organization User,Perfil de la organización
+Organization User,Usuario de la organización
 Other,Otro
-Other Details,Otros detalles
-Out Qty,Salir Cant.
-Out Value,disponibles Valor
+Other Details,Otros Detalles
+Out Qty,Cant. Saliente
+Out Value,Fuera de Valor
 Out of AMC,Fuera de AMC
-Out of Warranty,Fuera de la Garantía
+Out of Warranty,Fuera de Garantía
 Outgoing,Saliente
-Outgoing Email Settings,Configuración del correo electrónico saliente
-Outgoing Mail Server,Servidor de correo saliente
-Outgoing Mails,Los correos salientes
+Outgoing Email Settings,Configuración de Email saliente
+Outgoing Mail Server,Servidor de Email saliente
+Outgoing Mails,Emails salientes
 Outstanding Amount,Monto Pendiente
 Outstanding for Voucher ,Sobresaliente para Voucher
 Overhead,Gastos generales
-Overheads,gastos generales
+Overheads,Gastos generales
 Overlapping Conditions found between,Condiciones superpuestas encuentran entre
-Overview,visión de conjunto
+Overview,Visión de conjunto
 Owned,Propiedad
-Owner,propietario
+Owner,Propietario
 PAN Number,Número PAN
 PF No.,PF No.
 PF Number,Número PF
@@ -1708,12 +1708,12 @@ PO Date,PO Fecha
 PO No,PO No
 POP3 Mail Server,Servidor de correo POP3
 POP3 Mail Settings,Configuración de correo POP3
-POP3 mail server (e.g. pop.gmail.com),POP3 del servidor de correo (por ejemplo pop.gmail.com)
-POP3 server e.g. (pop.gmail.com),"Por ejemplo, el servidor POP3 (pop.gmail.com)"
+POP3 mail server (e.g. pop.gmail.com),Servidor de correo POP3 (por ejemplo pop.gmail.com)
+POP3 server e.g. (pop.gmail.com),"Ejmplo de servidor POP3 (pop.gmail.com)"
 POS Setting,Configuración POS
-POS View,POS View
+POS View,Vista POS
 PR Detail,PR Detalle
-PR Posting Date,PR Fecha de publicación
+PR Posting Date,PR Fecha de Publicación
 PRO,PRO
 PS,PS
 Package Item Details,Detalles del paquete del artículo
@@ -1729,77 +1729,77 @@ Packing Slip Items,Packing Slip Artículos
 Packing Slip(s) Cancelled,Lista de empaque (s) Cancelado
 Page Break,Salto de página
 Page Name,Nombre página
-Paid,pagado
+Paid,Pagado
 Paid Amount,Cantidad pagada
 Parameter,Parámetro
-Parent Account,Parent Account
-Parent Cost Center,Padres de centros de coste
-Parent Customer Group,Padres Grupo de Clientes
-Parent Detail docname,Padres VER MAS Extracto dentro detalle
-Parent Item,Artículo principal
-Parent Item Group,Grupo de Padres del artículo
-Parent Sales Person,Las ventas de Padres Persona
-Parent Territory,Padres Territorio
+Parent Account,Cuenta Padre
+Parent Cost Center,Padre de Centros de Coste
+Parent Customer Group,Padre Grupo de Clientes
+Parent Detail docname,Detalle de Padre docname
+Parent Item,Artículo Padre
+Parent Item Group,Grupo de Artículos Padre
+Parent Sales Person,Padre de Persona de Ventas
+Parent Territory,Territorio Padre
 Parenttype,ParentType
-Partially Billed,Parcialmente Anunciado
+Partially Billed,Parcialmente Facturado
 Partially Completed,Completada parcialmente
 Partially Delivered,Parcialmente Entregado
-Partly Billed,Mayormente Anunciado
-Partly Delivered,Mayormente Entregado
-Partner Target Detail,Socio Detalle Target
+Partly Billed,Parcialmente Facturado
+Partly Delivered,Parcialmente Entregado
+Partner Target Detail,Detalle del Target de Socio
 Partner Type,Tipo de Socio
-Partner's Website,Sitio Web del Socio
+Partner's Website,Sitio Web de Socio
 Passive,Pasivo
 Passport Number,Número de pasaporte
 Password,Contraseña
 Pay To / Recd From,Pagar a / A partir de RECD
-Payables,Cuentas por pagar
-Payables Group,Deudas Grupo
-Payment Days,Días de pago
-Payment Due Date,Pago Fecha de vencimiento
-Payment Entries,Las entradas de pago
+Payables,Pagaderos
+Payables Group,Grupo de Pagaderos
+Payment Days,Días de Pago
+Payment Due Date,Vencimiento del Pago
+Payment Entries,Entradas de Pagos
 "Payment Entry has been modified after you pulled it. 
 			Please pull it again.",
 Payment Period Based On Invoice Date,Período de pago basado en Fecha de la factura
-Payment Reconciliation,Pago Reconciliación
+Payment Reconciliation,Reconciliación del Pago
 Payment Type,Tipo de Pago
-Payment of salary for the month: ,
+Payment of salary for the month: ,Pago de salario para el mes: 
 Payment to Invoice Matching Tool,El pago a la herramienta Matching Factura
 Payment to Invoice Matching Tool Detail,Pago al detalle de la factura Matching Tool
 Payments,Pagos
-Payments Made,Pagos efectuados
-Payments Received,Los pagos recibidos
+Payments Made,Pagos Efectuados
+Payments Received,Pagos Recibidos
 Payments made during the digest period,Los pagos efectuados durante el período de digestión
 Payments received during the digest period,Los pagos recibidos durante el período de digestión
 Payroll Settings,Configuración de Nómina
-Payroll Setup,Nómina de configuración
+Payroll Setup,Setup de Nómina
 Pending,Pendiente
-Pending Amount,Pendiente Monto
+Pending Amount,Cantidad Pendiente
 Pending Review,Pendientes de revisión
 Pending SO Items For Purchase Request,Temas pendientes por lo que para Solicitud de Compra
-Percent Complete,Porcentaje completado
+Percent Complete,Porcentaje Completo
 Percentage Allocation,Porcentaje de asignación
 Percentage Allocation should be equal to ,Porcentaje de asignación debe ser igual a
 Percentage variation in quantity to be allowed while receiving or delivering this item.,Variación porcentual de la cantidad que se le permita al recibir o entregar este artículo.
 Percentage you are allowed to receive or deliver more against the quantity ordered. For example: If you have ordered 100 units. and your Allowance is 10% then you are allowed to receive 110 units.,"Porcentaje que se les permite recibir o entregar más en contra de la cantidad pedida. Por ejemplo: Si se ha pedido 100 unidades. y el subsidio es de 10%, entonces se le permite recibir 110 unidades."
-Performance appraisal.,Evaluación del desempeño.
-Period,período
-Period Closing Voucher,Período de cierre Voucher
+Performance appraisal.,Reconocimiento de desempeño.
+Period,Período
+Period Closing Voucher,Período de cierre del Recibo
 Periodicity,Periodicidad
 Permanent Address,Domicilio
-Permanent Address Is,Dirección permanente es
+Permanent Address Is,Domicilio es
 Permission,Permiso
-Permission Manager,Permiso Gerente
+Permission Manager,Gestor de Permisos
 Personal,Personal
 Personal Details,Datos Personales
-Personal Email,Correo electrónico personal
+Personal Email,Email Personal
 Phone,Teléfono
-Phone No,No de teléfono
-Phone No.,Número de Teléfono
+Phone No,Nº de Teléfono
+Phone No.,Nº de Teléfono
 Pincode,Código PIN
 Place of Issue,Lugar de Emisión
 Plan for maintenance visits.,Plan de visitas de mantenimiento.
-Planned Qty,Cantidad de Planificación
+Planned Qty,Cant. Planificada
 "Planned Qty: Quantity, for which, Production Order has been raised,","Planificada Cantidad : Cantidad , para lo cual, orden de producción se ha elevado ,"
 Planned Quantity,Cantidad planificada
 Plant,Planta
@@ -1830,7 +1830,7 @@ Please enter company name first,"Por favor, introduzca nombre de la empresa prim
 Please enter sales order in the above table,Por favor ingrese para ventas en la tabla anterior
 Please install dropbox python module,"Por favor, instale módulos python dropbox"
 Please mention default value for ',"Por favor, mencionar el valor por defecto para &#39;"
-Please reduce qty.,Reduzca Cantidad.
+Please reduce qty.,Reduzca cant.
 Please save the Newsletter before sending.,"Por favor, guarde el boletín antes de enviarlo."
 Please save the document before generating maintenance schedule,"Por favor, guarde el documento antes de generar el programa de mantenimiento"
 Please select Account first,"Por favor, seleccione Cuenta de primera"
@@ -1929,8 +1929,8 @@ Project activity / task.,Proyecto de actividad / tarea.
 Project master.,Proyecto maestro.
 Project will get saved and will be searchable with project name given,Proyecto se salvan y se podrán realizar búsquedas con el nombre de proyecto dado
 Project wise Stock Tracking,Proyecto sabio Tracking Stock
-Projected,proyectado
-Projected Qty,Cantidad proyectada
+Projected,Proyectado
+Projected Qty,Cant. Proyectada
 Projects,Proyectos
 Prompt for Email on Submission of,Preguntar por correo electrónico en la presentación de
 Provide email id registered in company,Proporcionar ID de correo electrónico registrada en la compañía
@@ -1981,14 +1981,14 @@ Purpose must be one of ,Propósito debe ser uno de
 QA Inspection,QA Inspección
 QAI/11-12/,QAI/11-12 /
 QTN,QTN
-Qty,Cantidad
-Qty Consumed Per Unit,Cantidad consumida por unidad
-Qty To Manufacture,Cantidad para la fabricación de
+Qty,Cant.
+Qty Consumed Per Unit,Cant. Consumida por Unidad
+Qty To Manufacture,Cant. a Fabricar
 Qty as per Stock UOM,Cantidad de la UOM como por
-Qty to Deliver,Cantidad para ofrecer
-Qty to Order,Cantidad de pedido
-Qty to Receive,Cantidad a Recibir
-Qty to Transfer,Cantidad de Transferencia
+Qty to Deliver,Cant. a Enviar
+Qty to Order,Cant. a Pedir
+Qty to Receive,Cant. a Recibir
+Qty to Transfer,Cant. a Transferir
 Qualification,Calificación
 Quality,Calidad
 Quality Inspection,Inspección de Calidad
@@ -2005,42 +2005,42 @@ Quantity of item obtained after manufacturing / repacking from given quantities 
 Quarter,Trimestre
 Quarterly,Trimestral
 Quick Help,Ayuda Rápida
-Quotation,Cita
+Quotation,Cotización
 Quotation Date,Cotización Fecha
-Quotation Item,Cotización del artículo
-Quotation Items,Artículos de Cotización
-Quotation Lost Reason,Cita Perdida Razón
-Quotation Message,Cita Mensaje
-Quotation Series,Series Cotización
-Quotation To,PRESUPUESTO a
-Quotation Trend,Tendencia Cotización
-Quotation is cancelled.,La cita es cancelada .
-Quotations received from Suppliers.,Citas recibidas de los proveedores.
-Quotes to Leads or Customers.,Cotizaciones a clientes potenciales o clientes.
-Raise Material Request when stock reaches re-order level,Levante solicitar material cuando el stock llega a re-ordenar nivel
-Raised By,Raised By
-Raised By (Email),Raised By (correo electrónico)
-Random,Azar
+Quotation Item,Cotización en artículo
+Quotation Items,Cotización en artículos
+Quotation Lost Reason,Razón de Pérdida de la Cotización
+Quotation Message,Mensaje de Cotización
+Quotation Series,Series de Cotización
+Quotation To,Cotizar a
+Quotation Trend,Tendencia de Cotización
+Quotation is cancelled.,Cotización cancelada .
+Quotations received from Suppliers.,Cotizacionesrecibidas de Proveedores.
+Quotes to Leads or Customers.,Cotizaciones a Clientes potenciales o Clientes.
+Raise Material Request when stock reaches re-order level,Elevar solicitud de material cuando el stock llega al nivel reposición
+Raised By,Elevado por
+Raised By (Email),Elevado por (Email)
+Random,Aleatorio
 Range,Alcance
-Rate,Velocidad
-Rate ,Velocidad
+Rate,Cambio
+Rate ,Cambio 
 Rate (Company Currency),Cambio (Moneda Company)
 Rate Of Materials Based On,Tasa de materiales basados ​​en
-Rate and Amount,Ritmo y la cuantía
+Rate and Amount,Cambio y cuantía
 Rate at which Customer Currency is converted to customer's base currency,Grado en el que la moneda del cliente se convierte a la moneda base del cliente
 Rate at which Price list currency is converted to company's base currency,Velocidad a la que se convierte la moneda Lista de precios a la moneda base de la compañía de
 Rate at which Price list currency is converted to customer's base currency,Velocidad a la que se convierte la moneda Lista de precios a la moneda base del cliente
 Rate at which customer's currency is converted to company's base currency,Grado en el que la moneda del cliente se convierten a la moneda base de la compañía de
 Rate at which supplier's currency is converted to company's base currency,Velocidad a la que se convierte la moneda del proveedor a la moneda base empresa
 Rate at which this tax is applied,Velocidad a la que se aplica este impuesto
-Raw Material Item Code,Materia Prima Código del artículo
+Raw Material Item Code,Código de la materia prima de Artículo
 Raw Materials Supplied,Materias primas suministradas
-Raw Materials Supplied Cost,Materias primas suministradas Costo
-Re-Order Level,Re-Order Nivel
-Re-Order Qty,Re-Order Cantidad
-Re-order,Reordenar
-Re-order Level,Reordenar Nivel
-Re-order Qty,Reordenar Cantidad
+Raw Materials Supplied Cost,Coste de las Materias primas suministradas
+Re-Order Level,Nivel de reposición
+Re-Order Qty,Cant. a Reponer
+Re-order,Reponer
+Re-order Level,Nivel de Reposición
+Re-order Qty,Cant. a reponer
 Read,Leer
 Reading 1,Lectura 1
 Reading 10,Reading 10
@@ -2061,18 +2061,18 @@ Receivable / Payable account will be identified based on the field Master Type,C
 Receivables,Cuentas por cobrar
 Receivables / Payables,Cobrar / por pagar
 Receivables Group,Deudores Grupo
-Received,recibido
+Received,Recibido
 Received Date,Fecha de recepción
 Received Items To Be Billed,Elementos recibidos a facturar
-Received Qty,Cantidad recibida
+Received Qty,Cant. Recibida
 Received and Accepted,Recibidas y aceptadas
-Receiver List,Receptor Lista
-Receiver Parameter,Receptor de parámetros
+Receiver List,Lista de Receptores
+Receiver Parameter,Parámetros de Receptor
 Recipients,Destinatarios
 Reconciliation Data,Reconciliación de Datos
 Reconciliation HTML,Reconciliación HTML
 Reconciliation JSON,Reconciliación JSON
-Record item movement.,Registre el movimiento de artículos.
+Record item movement.,Registro de movimiento de artículos.
 Recurring Id,Id recurrente
 Recurring Invoice,Factura Recurrente
 Recurring Type,Tipo recurrente
@@ -2085,53 +2085,53 @@ Reference Date,Fecha de referencia
 Reference Name,Referencia Nombre
 Reference Number,Referencia
 Refresh,Refrescar
-Refreshing....,Refrescante ....
+Refreshing....,Actualizando ....
 Registration Details,Detalles de registro
-Registration Info,Registro de Información
+Registration Info,Información de registro
 Rejected,Rechazado
 Rejected Quantity,Cantidad Rechazada
-Rejected Serial No,No Rechazado serie
+Rejected Serial No,Nº de serie Rechazado
 Rejected Warehouse,Almacén Rechazado
 Rejected Warehouse is mandatory against regected item,Almacén Rechazado es obligatorio en la partida regected
 Relation,Relación
-Relieving Date,Aliviar Fecha
-Relieving Date of employee is ,Aliviar Fecha de empleado
+Relieving Date,Fecha de Reducción
+Relieving Date of employee is ,La fecha de Reducción del Empleado es 
 Remark,Observación
 Remarks,Observaciones
-Rename,rebautizar
-Rename Log,Cambiar el nombre de sesión
-Rename Tool,Cambiar el nombre de la herramienta
-Rent Cost,Renta Costo
+Rename,Renombrar
+Rename Log,Histórico de renombrado
+Rename Tool,Herramienta de renombrado
+Rent Cost,Coste del Alquiler
 Rent per hour,Alquiler por horas
 Rented,Alquilado
-Repeat on Day of Month,Repita el Día del Mes
+Repeat on Day of Month,Repetir el Día del Mes
 Replace,Reemplazar
-Replace Item / BOM in all BOMs,Reemplazar elemento / BOM en todas las listas de materiales
+Replace Item / BOM in all BOMs,Reemplazar artículo / BOM en todas las listas de materiales
 "Replace a particular BOM in all other BOMs where it is used. It will replace the old BOM link, update cost and regenerate ""BOM Explosion Item"" table as per new BOM","Reemplazar un BOM particular en todas las listas de materiales de otros en los que se utiliza. Se sustituirá el enlace BOM viejo, actualizar el costo y regenerar &quot;Explosión lista de materiales Item&quot; tabla según nueva lista de materiales"
 Replied,Respondidos
 Report Date,Fecha del informe
 Report issues at,Informe de problemas en
 Reports,Informes
-Reports to,Informes al
-Reqd By Date,Reqd Por Fecha
+Reports to,Informa a
+Reqd By Date,Requerido por Fecha
 Request Type,Tipo de solicitud
 Request for Information,Solicitud de Información
 Request for purchase.,Solicitud de compra.
-Requested,requerido
-Requested For,solicitados para
-Requested Items To Be Ordered,Artículos solicitados se piden por
-Requested Items To Be Transferred,Artículos pidió su traslado
-Requested Qty,Solicitado Cantidad
+Requested,Solicitado
+Requested For,Solicitados para
+Requested Items To Be Ordered,Artículos solicitados para ser Pedidos
+Requested Items To Be Transferred,Artículos solicitados para ser Transladados
+Requested Qty,Cant. Solicitada
 "Requested Qty: Quantity requested for purchase, but not ordered.","Solicitado Cantidad : Cantidad solicitada para la compra, pero no ordenado ."
 Requests for items.,Las solicitudes de artículos.
 Required By,Requerido por la
-Required Date,Fecha requerida
-Required Qty,Cantidad necesaria
-Required only for sample item.,Se requiere sólo para el tema de la muestra.
+Required Date,Fecha de requerimiento
+Required Qty,Cantidad requerida
+Required only for sample item.,Se requiere sólo para muestra de artículo.
 Required raw materials issued to the supplier for producing a sub - contracted item.,Requeridos materias primas emitidas al proveedor para producir un sub - ítem contratado.
 Reseller,Revendedores
-Reserved,reservado
-Reserved Qty,reservados Cantidad
+Reserved,Reservado
+Reserved Qty,Cant. reservada
 "Reserved Qty: Quantity ordered for sale, but not delivered.","Reservados Cantidad : Cantidad a pedir a la venta , pero no entregado."
 Reserved Quantity,Cantidad reservada
 Reserved Warehouse,Reservado Almacén
